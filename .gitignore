@@ -1,0 +1,4 @@
+.vscode
+shared/*
+build/*
+simulator/sensors/tests/*
