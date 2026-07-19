@@ -2,3 +2,4 @@
 shared/*
 build/*
 simulator/sensors/tests/*
+simulator/motion/*

@@ -12,6 +12,7 @@ add_executable(DroneFlightController
     simulator/sensors/src/gyroscope.cpp
     simulator/sensors/src/imu.cpp
     simulator/sensors/src/dronestate.cpp 
+    simulator/sensors/src/gaussianNoise.cpp 
     
 )
 
