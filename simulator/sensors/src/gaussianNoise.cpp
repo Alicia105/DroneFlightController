@@ -8,7 +8,7 @@ GaussianNoise::GaussianNoise(float mean,float sigma){
     mt19937 generator(rd());
     normal_distribution<float> distribution(mean, sigma);
 }
-
+GaussianNoise::GaussianNoise(){}
 GaussianNoise::~GaussianNoise(){}
 
 float GaussianNoise::sample(){

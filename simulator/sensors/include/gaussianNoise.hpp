@@ -13,7 +13,7 @@ class GaussianNoise {
     std::normal_distribution<float> distribution;
 
     public:
-    
+    GaussianNoise();
     GaussianNoise(float mean,float sigma);
     ~GaussianNoise();
     float sample();
