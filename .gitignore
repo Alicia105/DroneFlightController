@@ -1,5 +1,5 @@
 .vscode
 shared/*
 build/*
-simulator/sensors/tests/*
+external/*
 simulator/motion/*

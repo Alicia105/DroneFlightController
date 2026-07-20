@@ -7,9 +7,19 @@ class SensorSaturation{
         float maxValue;
 
     public : 
-        
+        SensorSaturation();
         SensorSaturation(float min,float max);
         ~SensorSaturation();
+
+        //getters
+        float getMinSaturation();
+        float getMaxSaturation();
+
+        //setters
+
+        void setMinSaturation(float min);
+        void setMaxSaturation(float max);
+
         float applySaturation(float rawValue);
 
 };

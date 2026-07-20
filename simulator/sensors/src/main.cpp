@@ -8,12 +8,19 @@
 
 using namespace std;
 
-int main() {
+int main(){
     float g = 9.81;
     IMU imu;
     DroneState droneState;
     GaussianNoise noise(0.0,0.05);
     cout <<"Gaussian noise = "<<noise.sample()<<endl;
+
+    cout <<"Mean = "<<noise.getMean()<<endl;
+    cout<<"Sigma = "<<noise.getSigma()<<endl;
+    cout<<"Distribution Mean = "<<noise.getDistribution().mean()<<endl;
+    cout<<"Distribution Sigma = "<<noise.getDistribution().stddev()<<endl;
+
+
     SensorError s(0.0f,0.05f,0);
     SensorSaturation gyroSat(-250,250);
     SensorSaturation acceleroSat(-2*g,2*g);

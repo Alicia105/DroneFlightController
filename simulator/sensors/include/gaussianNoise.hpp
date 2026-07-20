@@ -8,7 +8,8 @@
 class GaussianNoise {
 
     private:
-
+    float mean;
+    float sigma;
     std::mt19937 generator;
     std::normal_distribution<float> distribution;
 
@@ -16,6 +17,13 @@ class GaussianNoise {
     GaussianNoise();
     GaussianNoise(float mean,float sigma);
     ~GaussianNoise();
+
+    //getters
+    float getMean();
+    float getSigma();
+
+    std::normal_distribution<float> getDistribution();
+
     float sample();
 
 };
