@@ -2,3 +2,5 @@
 shared/*
 build/*
 external/*
+n.cpp
+simulator/sensors/src/main.cpp

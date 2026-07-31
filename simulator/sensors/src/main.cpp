@@ -15,17 +15,17 @@ int main(){
     DroneState droneState;
     DroneState & drone = droneState;
     MotionGenerator motionGen;
-    /*GaussianNoise noise(0.0,0.05);
+    /*GaussianNoise noise(0.2,0.7);
     cout <<"Gaussian noise = "<<noise.sample()<<endl;
 
     cout <<"Mean = "<<noise.getMean()<<endl;
     cout<<"Sigma = "<<noise.getSigma()<<endl;
     cout<<"Distribution Mean = "<<noise.getDistribution().mean()<<endl;
-    cout<<"Distribution Sigma = "<<noise.getDistribution().stddev()<<endl;*/
+    cout<<"Distribution Sigma = "<<noise.getDistribution().stddev()<<endl;
 
     SensorError s(0.0f,0.05f,0);
     SensorSaturation gyroSat(-250,250);
-    SensorSaturation acceleroSat(-2*g,2*g);
+    SensorSaturation acceleroSat(-2*g,2*g);*/
 
     /*cout<<"-------------------Initialisation--------------------"<<endl;
     droneState.printPosition();
@@ -54,7 +54,7 @@ int main(){
     droneState.setPosition(1,2,3);
     droneState.setVelocity(1,1,1);*/
 
-    cout<<"-------------------Initialisation--------------------"<<endl;
+    /*cout<<"-------------------Initialisation--------------------"<<endl;
     imu.setAccelSensorSaturation(-2*g,2*g);
     imu.setGyroSensorSaturation(-250,250);
   
@@ -95,7 +95,7 @@ int main(){
     cout<<"-------------------IMU--------------------"<<endl;
     imu.updateMeasures(drone);
     imu.printAccelerometerData();
-    imu.printGyroscopeData();
+    imu.printGyroscopeData();*/
 
     return 0;
 }

@@ -18,6 +18,8 @@ class GaussianNoise {
     GaussianNoise(float mean,float sigma);
     ~GaussianNoise();
 
+    void configure(float mean,float sigma);
+
     //getters
     float getMean();
     float getSigma();

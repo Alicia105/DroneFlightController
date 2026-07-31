@@ -40,7 +40,7 @@ void IMU::setRate(float x){
 }
 
 void IMU::setAccelSensorError(float mean,float sigma,float b){ 
-    accelSensorErr(mean,sigma,b);
+    accelSensorErr.configure(mean,sigma,b);
     
 }
 
@@ -51,7 +51,7 @@ void IMU::setAccelSensorSaturation(float min,float max){
 }
 
 void IMU::setGyroSensorError(float mean,float sigma,float b){ 
-    gyroSensorErr(mean,sigma,b);
+    gyroSensorErr.configure(mean,sigma,b);
     
 }
 

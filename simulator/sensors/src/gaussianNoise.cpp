@@ -3,17 +3,20 @@
 
 using namespace std; 
 
-GaussianNoise::GaussianNoise(float m,float s){
-    mean=m;
-    sigma=s;
-    random_device rd;
-    mt19937 generator(rd());
-
-    normal_distribution<float> distribution(mean, sigma);
+GaussianNoise::GaussianNoise(float mean,float sigma): mean(mean),sigma(sigma),generator(random_device{}()), distribution(mean, sigma){
 }
 
 GaussianNoise::GaussianNoise(){}
 GaussianNoise::~GaussianNoise(){}
+
+//setters
+void GaussianNoise::configure(float mean,float sigma)
+{
+    this->mean = mean;
+    this->sigma = sigma;
+
+    distribution = normal_distribution<float>(mean,sigma);
+}
 
 //getters
 float GaussianNoise::getMean(){

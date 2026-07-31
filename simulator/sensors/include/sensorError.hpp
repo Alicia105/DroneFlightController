@@ -12,6 +12,8 @@ class SensorError{
         
         SensorError(float mean = 0,float sigma=0.05,float bias = 0);
         ~SensorError();
+
+        void configure(float mean,float sigma,float bias);
         float apply(float rawValue);
 
 };
