@@ -11,10 +11,11 @@ add_executable(DroneFlightController
     simulator/sensors/src/accelerometer.cpp
     simulator/sensors/src/gyroscope.cpp
     simulator/sensors/src/imu.cpp
-    simulator/sensors/src/dronestate.cpp 
     simulator/sensors/src/gaussianNoise.cpp
     simulator/sensors/src/sensorError.cpp 
-    simulator/sensors/src/sensorSaturation.cpp  
+    simulator/sensors/src/sensorSaturation.cpp
+    simulator/motion/src/motiongenerator.cpp  
+    shared/state/src/dronestate.cpp
     
 )
 
@@ -22,6 +23,7 @@ add_executable(DroneFlightController
 target_include_directories(DroneFlightController PRIVATE
    simulator/sensors/include
    simulator/motion/include    
-   simulator/communication/include          
+   simulator/communication/include
+   shared/state/include          
 )
 

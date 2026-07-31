@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../include/imu.hpp"
-#include "../include/dronestate.hpp"
+
+
 
 using namespace std;
 
@@ -17,22 +18,62 @@ float IMU::getRate(){
     return rate;
 }
 
+SensorError IMU::getAccelSensorError(){ 
+    return accelSensorErr;
+}
+
+SensorSaturation IMU::getAccelSensorSaturation(){
+    return accelSensorSat;
+}
+
+SensorError IMU::getGyroSensorError(){ 
+    return gyroSensorErr;
+}
+
+SensorSaturation IMU::getGyroSensorSaturation(){
+    return gyroSensorSat;
+}
+
 //setter
 void IMU::setRate(float x){
     rate=x;
 }
 
-//check
-void IMU::updateMeasures(DroneState drone){
-    setAx(drone.getAcceleration()[0]);
-    setAy(drone.getAcceleration()[1]);
-    setAz(drone.getAcceleration()[2]);
+void IMU::setAccelSensorError(float mean,float sigma,float b){ 
+    accelSensorErr(mean,sigma,b);
+    
+}
 
-    setWx(drone.getAngularVelocity()[0]);
-    setWy(drone.getAngularVelocity()[1]);
-    setWz(drone.getAngularVelocity()[2]);
+void IMU::setAccelSensorSaturation(float min,float max){
+    accelSensorSat.setMinSaturation(min);
+    accelSensorSat.setMaxSaturation(max);
+   
+}
+
+void IMU::setGyroSensorError(float mean,float sigma,float b){ 
+    gyroSensorErr(mean,sigma,b);
+    
+}
+
+void IMU::setGyroSensorSaturation(float min,float max){
+    gyroSensorSat.setMinSaturation(min);
+    gyroSensorSat.setMaxSaturation(max);
+}
+
+//check
+void IMU::updateMeasures(DroneState& drone){
+    
+    setAx(accelSensorSat.applySaturation(accelSensorErr.apply(drone.getAcceleration()[0])));
+    setAy(accelSensorSat.applySaturation(accelSensorErr.apply(drone.getAcceleration()[1])));
+    setAz(accelSensorSat.applySaturation(accelSensorErr.apply(drone.getAcceleration()[2])));
+
+    setWx(gyroSensorSat.applySaturation(gyroSensorErr.apply(drone.getAngularVelocity()[0])));
+    setWy(gyroSensorSat.applySaturation(gyroSensorErr.apply(drone.getAngularVelocity()[1])));
+    setWz(gyroSensorSat.applySaturation(gyroSensorErr.apply(drone.getAngularVelocity()[2])));
 
 }
+
+
 
 //write function to send datas via UART
 

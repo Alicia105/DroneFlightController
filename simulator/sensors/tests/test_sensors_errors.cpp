@@ -9,10 +9,11 @@
 using namespace std;
 
 TEST_CASE("Gaussian Noise Implementation", "[gaussian noise]") {
-    GaussianNoise noise(0,0.05);
+    float stddev=0.05;
+    GaussianNoise noise(0,stddev);
 
     REQUIRE(noise.getMean()==0);
-    REQUIRE(noise.getSigma()==0.05);
+    REQUIRE(noise.getSigma()-stddev<0.001);
 
 
     vector<float> v;
@@ -31,13 +32,14 @@ TEST_CASE("Gaussian Noise Implementation", "[gaussian noise]") {
         variance += pow(v[i] - m, 2);
     }
 
-    float standardDeviation = sqrt(variance/v.size());
+    float standardDeviation = sqrt(variance/(v.size()-1));
 
-    REQUIRE(round(m)==0);
-    REQUIRE(standardDeviation-0.05<0.05);//failed
+    REQUIRE(round(m)==0);//empirical
+    REQUIRE(noise.getDistribution().mean()==0);
 
-    /*noise.getDistribution().mean();
-    noise.getDistribution().stddev();//problem*/
+    
+    REQUIRE(standardDeviation-stddev<0.001);
+    REQUIRE(noise.getDistribution().stddev()==stddev);//problem
 }
 
 TEST_CASE("Saturation implementation", "[saturation]") {
