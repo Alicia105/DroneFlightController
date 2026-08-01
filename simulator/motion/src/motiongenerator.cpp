@@ -6,8 +6,8 @@
 using namespace std;
 
 MotionGenerator::MotionGenerator(){
-    time=0;
-    simulationTime=0;
+    currenTime=0;
+    simulationDurationTime=0;
     dt=0;
 }
 
@@ -22,11 +22,11 @@ float MotionGenerator::getDeltaTime(){
 }
 
 float MotionGenerator::getSimulationTime(){
-    return simulationTime;
+    return simulationDurationTime;
 }
 
 float MotionGenerator::getCurrentTime(){
-    return time;
+    return currenTime;
 }
 
 //setters
@@ -35,12 +35,12 @@ void MotionGenerator::setDeltaTime(float deltaTime){
 }
 
 void MotionGenerator::setSimulationTime(float simuTime){
-    simulationTime=simuTime;
+    simulationDurationTime=simuTime;
 }
 
 //update
 void MotionGenerator::update(){
-    time+=dt; 
+    currenTime+=dt; 
 }
 
 //scenarios
@@ -52,35 +52,37 @@ void MotionGenerator::hover(DroneState& drone,float r, float p, float y){
     drone.setOrientation(r,p,y);
     drone.setAngularVelocity(0,0,0);
     drone.setAngularAcceleration(0,0,0);
-
 }
 
 //Constant Roll
 void MotionGenerator::constantRoll(DroneState& drone,float rollRate){
-    float roll = drone.getAngularVelocity()[0]+rollRate*dt;
-    drone.setAngularVelocity(roll,0,0);
+    float roll = drone.getOrientation()[0]+rollRate*dt;
+    drone.setOrientation(roll,0,0);
+    drone.setAngularVelocity(rollRate,0,0);
     drone.setAngularAcceleration(0,0,0);
 }
 
 //Constant Pitch
 void MotionGenerator::constantPitch(DroneState& drone,float pitchRate){
-    float pitch = drone.getAngularVelocity()[1]+pitchRate*dt;
+    float pitch = drone.getOrientation()[1]+pitchRate*dt;
+    drone.setOrientation(0,pitch,0);
     drone.setAngularVelocity(0,pitchRate,0);
     drone.setAngularAcceleration(0,0,0);
 }
 
 //Constant yaw
 void MotionGenerator::constantYaw(DroneState& drone,float yawRate){
-    float yaw = drone.getAngularVelocity()[2]+yawRate*dt;
-    drone.setAngularVelocity(0,0,yaw);
+    float yaw = drone.getOrientation()[2]+yawRate*dt;
+    drone.setOrientation(0,0,yaw);
+    drone.setAngularVelocity(0,0,yawRate);
     drone.setAngularAcceleration(0,0,0);
 }
 
 //Sinusoidal Roll
 void MotionGenerator::sinusoidalRoll(DroneState& drone, float amplitude, float frequency){
-    float roll= amplitude*sin(2*M_PI*frequency*time);
-    float rollRate = amplitude*2*M_PI*frequency*cos(2*M_PI*frequency*time);
-    float rollAcceleration =-amplitude*pow(2*M_PI*frequency,2)*sin(2*M_PI*frequency*time);
+    float roll= amplitude*sin(2*M_PI*frequency*currenTime);
+    float rollRate = amplitude*2*M_PI*frequency*cos(2*M_PI*frequency*currenTime);
+    float rollAcceleration =-amplitude*pow(2*M_PI*frequency,2)*sin(2*M_PI*frequency*currenTime);
     
     drone.setOrientation(roll,0,0);
     drone.setAngularVelocity(rollRate,0,0);    
@@ -89,9 +91,9 @@ void MotionGenerator::sinusoidalRoll(DroneState& drone, float amplitude, float f
 
 //Sinusoidal Pitch
 void MotionGenerator::sinusoidalPitch(DroneState& drone, float amplitude, float frequency){
-    float pitch= amplitude*sin(2*M_PI*frequency*time);
-    float pitchRate = amplitude*2*M_PI*frequency*cos(2*M_PI*frequency*time);
-    float pitchAcceleration =-amplitude*pow(2*M_PI*frequency,2)*sin(2*M_PI*frequency*time);
+    float pitch= amplitude*sin(2*M_PI*frequency*currenTime);
+    float pitchRate = amplitude*2*M_PI*frequency*cos(2*M_PI*frequency*currenTime);
+    float pitchAcceleration =-amplitude*pow(2*M_PI*frequency,2)*sin(2*M_PI*frequency*currenTime);
     
     drone.setOrientation(0,pitch,0);
     drone.setAngularVelocity(0,pitchRate,0);    
@@ -100,13 +102,23 @@ void MotionGenerator::sinusoidalPitch(DroneState& drone, float amplitude, float 
 
 //Roll + Pitch
 void MotionGenerator::RollAndPitch(DroneState& drone,float rollAmplitude,float pitchAmplitude,float frequency){
-    sinusoidalRoll(drone,rollAmplitude,frequency);
-    sinusoidalPitch(drone,pitchAmplitude,frequency);
+    float roll = rollAmplitude*sin(2*M_PI*frequency*currenTime);
+    float rollRate = rollAmplitude*2*M_PI*frequency*cos(2*M_PI*frequency*currenTime);
+    float rollAcceleration = -rollAmplitude*pow(2*M_PI*frequency,2)*sin(2*M_PI*frequency*currenTime);
+
+    float pitch = pitchAmplitude*sin(2*M_PI*frequency*currenTime);
+    float pitchRate = pitchAmplitude*2*M_PI*frequency*cos(2*M_PI*frequency*currenTime);
+    float pitchAcceleration = -pitchAmplitude*pow(2*M_PI*frequency,2)*sin(2*M_PI*frequency*currenTime);
+    
+    drone.setOrientation(roll,pitch,0);
+    drone.setAngularVelocity(rollRate,pitchRate,0);    
+    drone.setAngularAcceleration(rollAcceleration,pitchAcceleration,0);   
 }
 
 //Takeoff simplifié
 void MotionGenerator::takeOff(DroneState& drone){
-    if(time<=2){
+    float g=9.81;
+    if(currenTime<=2){
         float az = 1;
         float vz = drone.getVelocity()[2] + az*dt;
         float z = drone.getPosition()[2] + vz*dt;
@@ -131,7 +143,7 @@ void MotionGenerator::takeOff(DroneState& drone){
 
 //landing simplifié
 void MotionGenerator::landing(DroneState& drone){
-    if(time>=2){
+    if(currenTime>=2){
         float az = -1;
         float vz = drone.getVelocity()[2] + az*dt;
         float z = drone.getPosition()[2] + vz*dt;
@@ -160,7 +172,7 @@ void MotionGenerator::landing(DroneState& drone){
 
 
 void MotionGenerator::printMotionGeneratorData(){
-    cout<<"simulation time : "<<simulationTime<<" s"<<endl;
+    cout<<"simulation time : "<<simulationDurationTime<<" s"<<endl;
     cout<<"dt : "<<dt<<" s"<<endl;
-    cout<<"current time : "<<time<<" s"<<endl;
+    cout<<"current time : "<<currenTime<<" s"<<endl;
 }

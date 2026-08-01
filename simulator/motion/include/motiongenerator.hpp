@@ -5,9 +5,9 @@
 #include "../../sensors/include/sensorSaturation.hpp"
 class MotionGenerator{
     private :
-        float time;
+        float currenTime;
         float dt;
-        float simulationTime;     
+        float simulationDurationTime;     
 
     public :
         MotionGenerator();

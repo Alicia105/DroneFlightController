@@ -54,7 +54,7 @@ int main(){
     droneState.setPosition(1,2,3);
     droneState.setVelocity(1,1,1);*/
 
-    /*cout<<"-------------------Initialisation--------------------"<<endl;
+    cout<<"-------------------Initialisation--------------------"<<endl;
     imu.setAccelSensorSaturation(-2*g,2*g);
     imu.setGyroSensorSaturation(-250,250);
   
@@ -71,7 +71,7 @@ int main(){
     motionGen.update();
 
     while(motionGen.getCurrentTime()<=motionGen.getSimulationTime()){
-        motionGen.constantPitch(drone,3);
+        motionGen.constantRoll(drone,3);
         
         cout<<"--------------------t ="<<motionGen.getCurrentTime()<<" --------------------"<<endl;
         motionGen.printMotionGeneratorData();
@@ -95,7 +95,7 @@ int main(){
     cout<<"-------------------IMU--------------------"<<endl;
     imu.updateMeasures(drone);
     imu.printAccelerometerData();
-    imu.printGyroscopeData();*/
+    imu.printGyroscopeData();
 
     return 0;
 }
