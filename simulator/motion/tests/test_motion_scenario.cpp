@@ -24,7 +24,7 @@ TEST_CASE("MotionGenerator setters", "[Motion Generator]")
     motion.setDeltaTime(0.01);
     motion.setSimulationTime(10);
 
-    REQUIRE(motion.getDeltaTime()==0.01f);
+    REQUIRE_THAT(motion.getDeltaTime(),WithinAbs(0.01,1e-6));
     REQUIRE(motion.getSimulationTime()==10);
 }
 
@@ -40,7 +40,7 @@ TEST_CASE("Simulation time update", "[Motion Generator]")
         n++;
     }
 
-    REQUIRE(motion.getCurrentTime()==0.3);
+    REQUIRE_THAT(motion.getCurrentTime(),WithinAbs(0.3,1e-6));
 }
 
 TEST_CASE("Hover scenario", "[Motion Generator]")
@@ -91,7 +91,7 @@ TEST_CASE("Constant pitch", "[Motion Generator]")
     motion.setDeltaTime(0.2);
     motion.constantPitch(drone,2);
 
-    REQUIRE(drone.getOrientation()[1] == 0.4);
+    REQUIRE_THAT(drone.getOrientation()[1],WithinAbs(0.4,1e-6));
     REQUIRE(drone.getAngularVelocity()[1] == 2);
     REQUIRE(drone.getAngularAcceleration()[1] == 0.0);
 }
