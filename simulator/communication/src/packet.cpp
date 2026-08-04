@@ -1,7 +1,7 @@
 #include "../include/packet.hpp"
 #include "../../sensors/include/imu.hpp"
 
-ImuPacket set(IMU& imu){
+ImuPacket setFromIMU(IMU& imu){
     ImuPacket packet;
     packet.ax=imu.getAx();
     packet.ay=imu.getAy();
@@ -11,4 +11,5 @@ ImuPacket set(IMU& imu){
     packet.wy=imu.getWy();
     packet.wz=imu.getWz();
 
+    return packet;
 }

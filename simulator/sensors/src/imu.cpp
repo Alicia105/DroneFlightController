@@ -1,8 +1,6 @@
 #include <iostream>
 #include "../include/imu.hpp"
 
-
-
 using namespace std;
 
 IMU::IMU():Accelerometer(),Gyroscope(){

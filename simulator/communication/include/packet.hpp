@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdint>
+#include "../../sensors/include/imu.hpp"
 
 typedef struct ImuPacket{
 
@@ -24,6 +25,6 @@ typedef struct ImuPacket{
     
 }ImuPacket;
 
-ImuPacket set(IMU& imu);
+ImuPacket setFromIMU(IMU& imu);
 
 #endif //PACKET_HPP

@@ -87,8 +87,9 @@ void UARTSerializer::appendFloat(vector<uint8_t>& buffer,float data){
 }
 
 uint8_t UARTSerializer::readUint8(const vector<uint8_t>& buffer, size_t& index){
+    uint8_t b = buffer[index];
     index+=1;
-    return buffer[index];
+    return b;
 }
 
 uint16_t UARTSerializer::readUint16(const vector<uint8_t>& buffer, size_t& index){
