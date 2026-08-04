@@ -4,7 +4,7 @@
 
 using namespace std;
 
-UARTSerializer::UARTSerializer(){}
+UARTSerializer::UARTSerializer(){}//convert packet to UART and back
 UARTSerializer::~UARTSerializer(){}
 
 vector<uint8_t> UARTSerializer::serialize(const ImuPacket& packet){

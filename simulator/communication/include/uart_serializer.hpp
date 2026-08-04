@@ -7,7 +7,7 @@
 class UARTSerializer{
     
     public:
-    UARTSerializer();
+    UARTSerializer();//convert packet to UART and back
     ~UARTSerializer();
 
     std::vector<uint8_t> serialize(const ImuPacket& packet);

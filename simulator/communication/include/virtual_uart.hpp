@@ -7,11 +7,10 @@
 #include "../include/packet.hpp"
 #include "../include/uart_serializer.hpp"
 
-class VirtualUART{
+class VirtualUART{//transport bytes
     private :
-        UARTSerializer serializer;
+        //UARTSerializer serializer;
         std::queue<uint8_t> txBuffer;
-        bool isAvailable;
         uint32_t baudRate;       
 
     public :
@@ -19,25 +18,19 @@ class VirtualUART{
         ~VirtualUART();
 
         //getters
-        bool VirtualUART::getIsAvailable();
-        uint32_t VirtualUART::getBaudRate();
+        uint32_t getBaudRate();
 
         //setters
-        void VirtualUART::setIsAvailable(bool status);
-        void VirtualUART::setBaudRate(uint32_t rate);
+        void setBaudRate(uint32_t rate);
         
-        void transmitByte(uint8_t& data);
+        void transmitByte(uint8_t data);
         uint8_t receiveByte();
 
         void transmit(std::vector<uint8_t>& data);
         std::vector<uint8_t> receive(size_t n);
-
-
-        ImuPacket read(std::vector<uint8_t>& data);
-        std::vector<uint8_t> write(ImuPacket& packet);
         
         size_t size();
-
+        bool dataAvailable();
 };
 
 #endif //VIRTUAL_UART_HPP
