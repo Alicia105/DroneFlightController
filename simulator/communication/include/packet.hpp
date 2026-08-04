@@ -24,4 +24,6 @@ typedef struct ImuPacket{
     
 }ImuPacket;
 
+ImuPacket set(IMU& imu);
+
 #endif //PACKET_HPP
