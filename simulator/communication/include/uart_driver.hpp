@@ -17,8 +17,8 @@ class UARTDriver{//interface to write/read packets
         UARTDriver();
         ~UARTDriver();
 
-        ImuPacket read(std::vector<uint8_t>& data);
-        std::vector<uint8_t> write(ImuPacket& packet);
+        ImuPacket read();
+        bool write(ImuPacket& packet);
         
 };
 

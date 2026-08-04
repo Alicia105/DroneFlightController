@@ -5,11 +5,16 @@ using namespace std;
 UARTDriver::UARTDriver(){}//interface to write/read packets
 UARTDriver::~UARTDriver(){}
 
-ImuPacket UARTDriver::read(std::vector<uint8_t>& data){
+ImuPacket UARTDriver::read(){
+    size_t n=channel.size();
+    vector<uint8_t> data = channel.receive(n);
     return serializer.deserialize(data);
 }
 
-vector<uint8_t> UARTDriver::write(ImuPacket& packet){
-    return serializer.serialize(packet);
+bool UARTDriver::write(ImuPacket& packet){
+    vector<uint8_t> data = serializer.serialize(packet);
+    channel.transmit(data);
+
+    return channel.dataAvailable();
 }
 
