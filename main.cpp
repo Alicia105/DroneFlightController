@@ -14,6 +14,8 @@
 #include "simulator/communication/include/uart_serializer.hpp"
 #include "simulator/communication/include/virtual_uart.hpp"
 #include "simulator/communication/include/uart_driver.hpp"
+#include "simulator/communication/include/packet_builder.hpp"
+#include "simulator/communication/include/packet_validator.hpp"
 
 using namespace std;
 
@@ -86,6 +88,8 @@ int main(){
     VirtualUART& channel=ch;
 
     UARTDriver driver(channel);
+    PacketBuilder packetBuilder;
+    PacketValidator packetValidator;
 
     ImuPacket packet{};
 
@@ -123,18 +127,21 @@ int main(){
         motionGen.update();
 
         //ImuPacket
-        ImuPacket packet=setFromIMU(imu);
+        /*ImuPacket packet=setFromIMU(imu);
         packet.header = 0xAA;
         packet.packetID = 0x01;
         packet.payloadSize = 24;
         packet.timestamp = 0x00111101;
-        packet.checksum = 0x0B02;
+        packet.checksum = 0x0B02;*/
 
-        driver.write(packet);
-        ImuPacket pck=driver.read();
-        cout<<"-------------------ImuPacket--------------------"<<endl;
-        printImuPacket(pck);
-        
+        ImuPacket packet=packetBuilder.createImuPacket(imu);
+        bool isPacketAvailable=packetValidator.validate(packet);
+        if(isPacketAvailable){
+            driver.write(packet);
+            ImuPacket pck=driver.read();
+            cout<<"-------------------ImuPacket--------------------"<<endl;
+            printImuPacket(pck);
+        }
     }
 
     cout<<"--------------------t ="<<motionGen.getCurrentTime()<<" --------------------"<<endl;

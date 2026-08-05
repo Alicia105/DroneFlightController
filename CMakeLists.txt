@@ -18,7 +18,9 @@ add_executable(DroneFlightController
     simulator/communication/src/packet.cpp  
     simulator/communication/src/uart_serializer.cpp
     simulator/communication/src/virtual_uart.cpp  
-    simulator/communication/src/uart_driver.cpp    
+    simulator/communication/src/uart_driver.cpp
+    simulator/communication/src/packet_validator.cpp 
+    simulator/communication/src/packet_builder.cpp     
     shared/state/src/dronestate.cpp
     
 )
