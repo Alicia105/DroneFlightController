@@ -2,5 +2,4 @@
 shared/*
 build/*
 external/*
-main.cpp
 main.exe

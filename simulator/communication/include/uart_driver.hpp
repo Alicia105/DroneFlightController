@@ -10,15 +10,16 @@
 
 class UARTDriver{//interface to write/read packets
     private :
-        VirtualUART channel;
+        VirtualUART& channel;
         UARTSerializer serializer;
     
     public :
-        UARTDriver();
+        UARTDriver(VirtualUART& uart);
         ~UARTDriver();
 
+        UARTSerializer getSerializer();
         ImuPacket read();
-        bool write(ImuPacket& packet);
+        void write(const ImuPacket& packet);
         
 };
 

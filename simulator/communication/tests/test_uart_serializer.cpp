@@ -9,7 +9,6 @@
 using Catch::Matchers::WithinAbs;
 using namespace std;
 
-
 TEST_CASE("IMU Data fields", "[Packet]") {
     IMU i;
     IMU& imu=i;
@@ -31,7 +30,6 @@ TEST_CASE("IMU Data fields", "[Packet]") {
     packet.timestamp=0x00111101;
     
     packet.checksum=0x0B02;
-
 
     REQUIRE(packet.header == 0xAA);
     REQUIRE(packet.packetID == 0x01);

@@ -36,7 +36,7 @@ void VirtualUART::transmit(vector<uint8_t>& data){
 }
 
 vector<uint8_t> VirtualUART::receive(size_t n){
-    vector<uint8_t> received;;
+    vector<uint8_t> received;
     for(int i=0;i<n;i++){
         received.push_back(receiveByte());
     }

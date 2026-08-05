@@ -2,9 +2,11 @@
 #define PACKET_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <cstdint>
 #include "../../sensors/include/imu.hpp"
 
+constexpr size_t IMU_PACKET_SIZE = 34;
 typedef struct ImuPacket{
 
     uint8_t header;      // 0xAA
@@ -26,5 +28,9 @@ typedef struct ImuPacket{
 }ImuPacket;
 
 ImuPacket setFromIMU(IMU& imu);
+
+void printFloatBytes(float value);
+void printImuPacket(const ImuPacket& packet);
+void printImuPacketAsBytes(const ImuPacket& packet);
 
 #endif //PACKET_HPP

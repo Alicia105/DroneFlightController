@@ -7,14 +7,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Source files
 add_executable(DroneFlightController 
-    simulator/sensors/src/main.cpp 
+    main.cpp 
     simulator/sensors/src/accelerometer.cpp
     simulator/sensors/src/gyroscope.cpp
     simulator/sensors/src/imu.cpp
     simulator/sensors/src/gaussianNoise.cpp
     simulator/sensors/src/sensorError.cpp 
     simulator/sensors/src/sensorSaturation.cpp
-    simulator/motion/src/motiongenerator.cpp  
+    simulator/motion/src/motiongenerator.cpp
+    simulator/communication/src/packet.cpp  
+    simulator/communication/src/uart_serializer.cpp
+    simulator/communication/src/virtual_uart.cpp  
+    simulator/communication/src/uart_driver.cpp    
     shared/state/src/dronestate.cpp
     
 )
