@@ -17,6 +17,35 @@
 #include "simulator/communication/include/packet_builder.hpp"
 #include "simulator/communication/include/packet_validator.hpp"
 
+#include "FreeRTOS/Source/include/FreeRTOS.h"
+#include "FreeRTOS/Source/include/task.h"
+
+//for FreeRTOS
+//#include "FreeRTOS/Source//include/FreeRTOSConfig.h"
+/*#include "FreeRTOS/Source/include/FreeRTOS.h"
+#include "FreeRTOS/Source/include/atomic.h"
+#include "FreeRTOS/Source/include/croutine.h"
+#include "FreeRTOS/Source/include/deprecated_definitions.h"
+#include "FreeRTOS/Source/include/event_groups.h"
+#include "FreeRTOS/Source/include/list.h"
+#include "FreeRTOS/Source/include/message_buffer.h"
+//#include "FreeRTOS/Source/include/mpu_prototypes.h"
+#include "FreeRTOS/Source/include/mpu_syscall_numbers.h"
+#include "FreeRTOS/Source/include/mpu_wrappers.h"
+//#include "FreeRTOS/Source/include/newlib-freertos.h"
+//#include "FreeRTOS/Source/include/piclib-freeertos.h"
+#include "FreeRTOS/Source/include/portable.h"
+#include "FreeRTOS/Source/include/projdefs.h"
+#include "FreeRTOS/Source/include/queue.h"
+#include "FreeRTOS/Source/include/semphr.h"
+#include "FreeRTOS/Source/include/stack_macros.h"
+#include "FreeRTOS/Source/include/StackMacros.h"
+#include "FreeRTOS/Source/include/stream_buffer.h"
+#include "FreeRTOS/Source/include/task.h"
+#include "FreeRTOS/Source/include/timers.h"
+#include "FreeRTOS/Source/portable/MSVC-MingW/portmacro.h"*/
+
+
 using namespace std;
 
 /*template<typename T>
@@ -75,7 +104,7 @@ int main(){
 }*/
 
 
-int main(){
+/*int main(){
 
     //declarations
     float g = 9.81;
@@ -134,7 +163,7 @@ int main(){
         packet.timestamp = 0x00111101;
         packet.checksum = 0x0B02;*/
 
-        ImuPacket packet=packetBuilder.createImuPacket(imu);
+       /*ImuPacket packet=packetBuilder.createImuPacket(imu);
         bool isPacketAvailable=packetValidator.validate(packet);
         if(isPacketAvailable){
             driver.write(packet);
@@ -154,6 +183,45 @@ int main(){
     imu.printAccelerometerData();
     imu.printGyroscopeData();
 
+
+    return 0;
+}*/
+
+extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,char* pcTaskName){
+    (void)xTask;
+    (void)pcTaskName;
+
+    cerr << "FreeRTOS: stack overflow detected in task: "
+              << pcTaskName << endl;
+
+    while (true)
+    {
+    }
+}
+
+extern "C" void vApplicationMallocFailedHook(){
+    cerr << "FreeRTOS: malloc failed!" << endl;
+
+    while (true)
+    {
+    }
+}
+
+void testTask(void* parameter){
+    while (true)
+    {
+        cout << "FreeRTOS task is running!" << endl;
+
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+int main(){
+    xTaskCreate(testTask,"TestTask",configMINIMAL_STACK_SIZE,nullptr,1,nullptr);
+
+    vTaskStartScheduler();
+
+    cout << "Scheduler stopped!" << endl;
 
     return 0;
 }
