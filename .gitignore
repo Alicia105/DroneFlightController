@@ -1,8 +1,5 @@
 .vscode
-shared/*
 build/*
 external/*
 firmware/*
-CMakeLists.txt
-main.cpp
 main.exe
