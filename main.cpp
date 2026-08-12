@@ -1,16 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <bitset>
-#include <cstdint>
-#include <vector>
-#include "simulator/sensors/include/accelerometer.hpp"
-#include "simulator/sensors/include/gyroscope.hpp"
-#include "simulator/sensors/include/imu.hpp"
-#include "simulator/sensors/include/sensorSaturation.hpp"
-#include "simulator/sensors/include/sensorError.hpp"
-#include "simulator/motion/include/motiongenerator.hpp"
-#include "shared/state/include/dronestate.hpp"
-#include "shared/communication/include/packet.hpp"
 #include "simulator/communication/uart/include/uart_serializer.hpp"
 #include "simulator/communication/uart/include/virtual_uart.hpp"
 #include "simulator/communication/uart/include/uart_driver.hpp"
@@ -19,6 +7,9 @@
 
 #include "external/FreeRTOS/Source/include/FreeRTOS.h"
 #include "firmware/common/include/freertos_objects.hpp"
+#include "firmware/tasks/include/sensortask.hpp"
+#include "firmware/tasks/include/controllertask.hpp"
+#include "firmware/tasks/include/actuatortask.hpp"
 
 
 using namespace std;
@@ -178,107 +169,6 @@ extern "C" void vApplicationMallocFailedHook(){
     }
 }
 
-void testTask(void* parameter){
-    while (true)
-    {
-        cout << "FreeRTOS task is running!" << endl;
-
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
-
-/*
-Cette tâche représente le travail qui serait effectué par le microcontrôleur pour récupérer les données des capteurs.
-*/
-void sensorTask(void* parameter){
-    (void)parameter;
-    float g = 9.81;
-    IMU imu;
-    DroneState droneState;
-    DroneState & drone = droneState;
-    MotionGenerator motionGen;
-    PacketBuilder builder;
-    PacketValidator packetValidator;
-
-    //sensors implementation
-    imu.setAccelSensorSaturation(-2*g,2*g);
-    imu.setGyroSensorSaturation(-250,250);
-    
-    //motiongenerator implementation
-    float dt=1/100;
-    motionGen.setDeltaTime(dt);
-
-    //set drone start position
-    drone.setPosition(1,2,3);
-    drone.setVelocity(1,1,1);
-
-    while (true){
-        motionGen.RollAndPitch(drone,3,4,5);
-        imu.updateMeasures(drone);
-        motionGen.update();
-
-        ImuPacket packet = builder.createImuPacket(imu);
-        bool isPacketValid=packetValidator.validate(packet);
-
-        if(isPacketValid){
-            xQueueSend(imuQueue,&packet,portMAX_DELAY);
-            cout << "[SensorTask] Reading IMU ..." << endl;   
-        }
-        cout << "[SensorTask] Sending IMU ..." << endl;        
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-}
-
-void communicationTask(void* parameter){
-    (void)parameter;
-    while (true){
-        cout << "[CommunicationTask] Updating measures ..." << endl;
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-}
-
-/**
- * @brief 
-    C'est probablement la tâche la plus importante. Elle reçoit les mesures de l'IMU.
-    Elle peut ensuite :
-    -désérialiser/interpréter les données ;
-    -estimer l'état du drone ;
-    -comparer l'état actuel à la consigne ;
-    -calculer les erreurs ;
-    -appliquer les contrôleurs PID ;
-    -produire les commandes moteurs.
- * 
- */
-
-void controllerTask(void* parameter){
-    (void)parameter;
-    PacketValidator packetValidator;
-
-    while (true){
-        ImuPacket packet{};
-        
-        if (xQueueReceive(imuQueue, &packet, portMAX_DELAY) == pdTRUE){
-            bool isPacketValid=packetValidator.validate(packet);
-            if(isPacketValid){
-                cout<< "[Controller] IMU: "<< "ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< "wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<<endl;
-            }
-
-        }        
-        cout << "[ControllerTask] Updating controller ..." << endl;
-        vTaskDelay(pdMS_TO_TICKS(20));
-    }
-}
-
-/*
-application des commandes
-*/
-void actuatorTask(void* parameter){
-    (void)parameter;
-    while (true){
-        cout << "[ActuatorTask] Updating controller ..." << endl;
-        vTaskDelay(pdMS_TO_TICKS(20));
-    }
-}
 
 
 int main(){

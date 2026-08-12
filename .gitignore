@@ -1,5 +1,4 @@
 .vscode
 build/*
 external/*
-firmware/*
 main.exe

@@ -101,6 +101,10 @@ set(SHARED_SOURCES
 
 set(FIRMWARE_SOURCES
     ${FIRMWARE_DIR}/common/src/freertos_objects.cpp
+    ${FIRMWARE_DIR}/tasks/src/sensortask.cpp
+    ${FIRMWARE_DIR}/tasks/src/controllertask.cpp
+    ${FIRMWARE_DIR}/tasks/src/communicationtask.cpp
+    ${FIRMWARE_DIR}/tasks/src/actuatortask.cpp
 )
 
 # Source files
@@ -124,7 +128,8 @@ target_include_directories(DroneFlightController PRIVATE
     simulator/motion/include    
     simulator/communication/include
     shared/state/include
-    firmware/common/include          
+    firmware/common/include
+    firmware/tasks/include              
 )
 
 if(WIN32)
