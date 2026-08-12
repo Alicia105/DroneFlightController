@@ -2,7 +2,7 @@
 #define UART_SERIALIZER_HPP
 
 #include <vector>
-#include "packet.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
 
 class UARTSerializer{
     

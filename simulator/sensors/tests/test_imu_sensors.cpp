@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN
-#include "../../../external/include/catch_amalgamated.hpp"
+#include "../../../external/Catch2/include/catch_amalgamated.hpp"
 #include "../include/accelerometer.hpp"
 #include "../include/gyroscope.hpp"
 #include "../include/imu.hpp"

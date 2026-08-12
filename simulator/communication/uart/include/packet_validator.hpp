@@ -4,8 +4,9 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdint>
-#include "../../sensors/include/imu.hpp"
-#include "packet.hpp"
+#include "../../../sensors/include/imu.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
+
 
 class PacketValidator{
     private:

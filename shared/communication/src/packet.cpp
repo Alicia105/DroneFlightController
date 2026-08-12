@@ -1,5 +1,4 @@
 #include "../include/packet.hpp"
-#include "../../sensors/include/imu.hpp"
 
 using namespace std;
 

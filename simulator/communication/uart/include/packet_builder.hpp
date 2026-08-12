@@ -5,8 +5,8 @@
 #include <iomanip>
 #include <cstdint>
 #include <cstddef>
-#include "../../sensors/include/imu.hpp"
-#include "packet.hpp"
+#include "../../../sensors/include/imu.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
 
 enum class PacketID : uint8_t
 {

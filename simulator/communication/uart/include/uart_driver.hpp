@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include <vector>
-#include "../include/packet.hpp"
-#include "../include/uart_serializer.hpp"
-#include "../include/virtual_uart.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
+#include "uart_serializer.hpp"
+#include "virtual_uart.hpp"
 
 
 class UARTDriver{//interface to write/read packets

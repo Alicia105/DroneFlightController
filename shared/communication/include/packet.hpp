@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdint>
-#include "../../sensors/include/imu.hpp"
+#include "../../../simulator/sensors/include/imu.hpp"
 
 constexpr size_t IMU_PACKET_SIZE = 34;
 typedef struct ImuPacket{

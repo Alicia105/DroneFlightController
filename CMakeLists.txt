@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ---------------------------------------------------------
 
 set(FREERTOS_DIR
-    "${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS/Source"
+    "${CMAKE_CURRENT_SOURCE_DIR}/external/FreeRTOS/Source"
 )
 
 set(FREERTOS_PORT
@@ -47,24 +47,84 @@ set(FREERTOS_SOURCES
 # ---------------------------------------------------------
 # Application
 # ---------------------------------------------------------
+set(SIMULATOR_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/simulator"
+)
+
+set(COMMUNICATION_DIR
+    "${SIMULATOR_DIR}/communication/uart/src"
+)
+
+set(MOTION_DIR
+    "${SIMULATOR_DIR}/motion/src"
+)
+
+set(SENSORS_DIR
+    "${SIMULATOR_DIR}/sensors/src"
+)
+
+set(FIRMWARE_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/firmware/"
+)
+
+set(SHARED_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/shared/"
+)
+
+set(COMMUNICATION_SOURCES
+    ${COMMUNICATION_DIR}/packet_builder.cpp
+    ${COMMUNICATION_DIR}/packet_validator.cpp
+    ${COMMUNICATION_DIR}/virtual_uart.cpp
+    ${COMMUNICATION_DIR}/uart_serializer.cpp
+    ${COMMUNICATION_DIR}/uart_driver.cpp
+
+)
+
+set(MOTION_SOURCES
+    ${MOTION_DIR}/motiongenerator.cpp
+)
+
+set(SENSORS_SOURCES
+    ${SENSORS_DIR}/accelerometer.cpp
+    ${SENSORS_DIR}/gyroscope.cpp
+    ${SENSORS_DIR}/imu.cpp
+    ${SENSORS_DIR}/gaussianNoise.cpp
+    ${SENSORS_DIR}/sensorError.cpp
+    ${SENSORS_DIR}/sensorSaturation.cpp
+
+)
+
+set(SHARED_SOURCES
+    ${SHARED_DIR}/state/src/dronestate.cpp
+    ${SHARED_DIR}/communication/src/packet.cpp
+)
+
+set(FIRMWARE_SOURCES
+    ${FIRMWARE_DIR}/common/src/freertos_objects.cpp
+)
 
 # Source files
 add_executable(DroneFlightController
    main.cpp
-    ${FREERTOS_SOURCES}
+   ${FREERTOS_SOURCES}
+   ${SENSORS_SOURCES}
+   ${MOTION_SOURCES}
+   ${SHARED_SOURCES}
+   ${COMMUNICATION_SOURCES}
+   ${FIRMWARE_SOURCES}
 )
 
 
 # Include directories
 target_include_directories(DroneFlightController PRIVATE
     ${FREERTOS_DIR}/include
-
     ${FREERTOS_PORT}/portmacro.h
     
     simulator/sensors/include
     simulator/motion/include    
     simulator/communication/include
-    shared/state/include          
+    shared/state/include
+    firmware/common/include          
 )
 
 if(WIN32)

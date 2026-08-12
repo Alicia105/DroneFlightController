@@ -2,5 +2,7 @@
 shared/*
 build/*
 external/*
-FreeRTOS/*
+firmware/*
+CMakeLists.txt
+main.cpp
 main.exe

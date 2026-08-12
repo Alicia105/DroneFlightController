@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include <algorithm>
 #include <cmath>
-#include "../../../external/include/catch_amalgamated.hpp"
+#include "../../../external/Catch2/include/catch_amalgamated.hpp"
 #include "../../../shared/state/include/dronestate.hpp"
 #include "../include/motiongenerator.hpp"
 

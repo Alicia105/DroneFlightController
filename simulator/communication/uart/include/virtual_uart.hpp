@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include "../include/packet.hpp"
-#include "../include/uart_serializer.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
+#include "uart_serializer.hpp"
 
 class VirtualUART{//transport bytes
     private :

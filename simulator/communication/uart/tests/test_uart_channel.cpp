@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_MAIN
 #include <iostream>
 #include <vector>
-#include "../../../external/include/catch_amalgamated.hpp"
-#include "../../sensors/include/imu.hpp"
-#include "../include/packet.hpp"
+#include "../../../../external/Catch2/include/catch_amalgamated.hpp"
+#include "../../../sensors/include/imu.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
 #include "../include/uart_serializer.hpp"
 #include "../include/virtual_uart.hpp"
 
