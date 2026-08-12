@@ -9,7 +9,7 @@
 #include "../../../shared/state/include/dronestate.hpp"
 #include "../../../shared/communication/include/packet.hpp"
 #include "../../../simulator/communication/uart/include/uart_serializer.hpp"
-#include "../../../simulator/communication/uart/include/virtual_uart.hpp"
+#include "../../../simulator/communication/uart/include/uart_channel.hpp"
 #include "../../../simulator/communication/uart/include/uart_driver.hpp"
 #include "../../../simulator/communication/uart/include/packet_builder.hpp"
 #include "../../../simulator/communication/uart/include/packet_validator.hpp"

@@ -1,4 +1,4 @@
-#include "../include/sensortask.hpp"
+#include "../include/physicstask.hpp"
 
 using namespace std;
 
@@ -6,7 +6,7 @@ using namespace std;
 /*
 Cette tâche représente le travail qui serait effectué par le microcontrôleur pour récupérer les données des capteurs.
 */
-void sensorTask(void* parameter){
+void physicsTask(void* parameter){
     (void)parameter;
     float g = 9.81;
     IMU imu;
@@ -38,9 +38,9 @@ void sensorTask(void* parameter){
 
         if(isPacketValid){
             xQueueSend(imuQueue,&packet,portMAX_DELAY);
-            cout << "[SensorTask] Reading IMU ..." << endl;   
+            cout << "[PhysicsTask] Reading IMU ..." << endl;   
         }
-        cout << "[SensorTask] Sending IMU ..." << endl;        
+        cout << "[PhysicsTask] Sending IMU ..." << endl;        
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

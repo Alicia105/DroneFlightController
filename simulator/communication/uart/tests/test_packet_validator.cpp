@@ -5,7 +5,7 @@
 #include "../../../sensors/include/imu.hpp"
 #include "../../../../shared/communication/include/packet.hpp"
 #include "../include/uart_serializer.hpp"
-#include "../include/virtual_uart.hpp"
+#include "../include/uart_channel.hpp"
 #include "../include/packet_builder.hpp"
 #include "../include/packet_validator.hpp"
 

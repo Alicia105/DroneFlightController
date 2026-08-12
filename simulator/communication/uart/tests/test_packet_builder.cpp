@@ -5,7 +5,7 @@
 #include "../../../../shared/communication/include/packet.hpp"
 #include "../../../sensors/include/imu.hpp"
 #include "../include/uart_serializer.hpp"
-#include "../include/virtual_uart.hpp"
+#include "../include/uart_channel.hpp"
 #include "../include/packet_builder.hpp"
 
 using Catch::Matchers::WithinAbs;

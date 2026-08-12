@@ -1,5 +1,5 @@
-#ifndef VIRTUAL_UART_HPP
-#define VIRTUAL_UART_HPP
+#ifndef UART_CHANNEL_HPP
+#define UART_CHANNEL_HPP
 
 #include <iostream>
 #include <vector>
@@ -7,15 +7,15 @@
 #include "../../../../shared/communication/include/packet.hpp"
 #include "uart_serializer.hpp"
 
-class VirtualUART{//transport bytes
+class UARTChannel{//transport bytes
     private :
         //UARTSerializer serializer;
         std::queue<uint8_t> txBuffer;
         uint32_t baudRate;       
 
     public :
-        VirtualUART();
-        ~VirtualUART();
+        UARTChannel();
+        ~UARTChannel();
 
         //getters
         uint32_t getBaudRate();
@@ -33,4 +33,4 @@ class VirtualUART{//transport bytes
         bool dataAvailable();
 };
 
-#endif //VIRTUAL_UART_HPP
+#endif //UART_CHANNEL_HPP

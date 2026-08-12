@@ -22,7 +22,7 @@ void controllerTask(void* parameter){
     while (true){
         ImuPacket packet{};
         
-        if (xQueueReceive(imuQueue, &packet, portMAX_DELAY) == pdTRUE){
+        if (xQueueReceive(txQueue, &packet, portMAX_DELAY) == pdTRUE){
             bool isPacketValid=packetValidator.validate(packet);
             if(isPacketValid){
                 cout<< "[Controller] IMU: "<< "ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< "wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<<endl;

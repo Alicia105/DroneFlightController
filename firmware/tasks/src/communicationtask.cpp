@@ -2,12 +2,24 @@
 
 using namespace std;
 
+
 void communicationTask(void* parameter){
     (void)parameter;
+    PacketValidator packetValidator;
+    UARTChannel ch;
+    UARTChannel& channel = ch;
+    UARTDriver driver(channel);
     while (true){
-        cout << "[CommunicationTask] Updating measures ..." << endl;
-        vTaskDelay(pdMS_TO_TICKS(10));
+        ImuPacket packet{};
+        
+        if (xQueueReceive(imuQueue, &packet, portMAX_DELAY) == pdTRUE){
+            bool isPacketValid=packetValidator.validate(packet);
+            if(isPacketValid){
+                cout<< "[CommunicationTask]  Received IMU: "<< "ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< "wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<<endl;
+                //driver.write(packet);
+            }
+        }        
+        cout << "[CommunicationTask] Sending data to UART ..." << endl;
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
-
-

@@ -5,13 +5,13 @@
 #include "../../../sensors/include/imu.hpp"
 #include "../../../../shared/communication/include/packet.hpp"
 #include "../include/uart_serializer.hpp"
-#include "../include/virtual_uart.hpp"
+#include "../include/uart_channel.hpp"
 
 using Catch::Matchers::WithinAbs;
 using namespace std;
 
 TEST_CASE("UART Channel implementaion", "[UART Channel]"){
-    VirtualUART channel;
+    UARTChannel channel;
     REQUIRE(channel.size()==0);
     REQUIRE(channel.getBaudRate()==115200);
     channel.setBaudRate(1152);
@@ -19,13 +19,13 @@ TEST_CASE("UART Channel implementaion", "[UART Channel]"){
 }
 
 TEST_CASE("1 byte transmission via UART Channel", "[UART Channel]"){
-    VirtualUART channel;
+    UARTChannel channel;
     channel.transmitByte(0xAA);
     REQUIRE(channel.receiveByte()==0xAA);
 }
 
 TEST_CASE("Several bytes transmission via UART Channel", "[UART Channel]"){
-    VirtualUART channel;
+    UARTChannel channel;
 
     vector<uint8_t> buffer = {0x78,0x56,0x34,0x12};
     size_t index = 4;
@@ -50,7 +50,7 @@ TEST_CASE("Several bytes transmission via UART Channel", "[UART Channel]"){
 }
 
 TEST_CASE("UART Channel size", "[UART Channel]"){
-    VirtualUART channel;
+    UARTChannel channel;
     REQUIRE(channel.size()==0);
     channel.transmitByte(0xAA);
     REQUIRE(channel.size()==1);    
@@ -58,7 +58,7 @@ TEST_CASE("UART Channel size", "[UART Channel]"){
 }
 
 TEST_CASE("UART Channel available for transmission", "[UART Channel]"){
-    VirtualUART channel;
+    UARTChannel channel;
     REQUIRE(channel.dataAvailable()==false);
     channel.transmitByte(0xAA);
     REQUIRE(channel.dataAvailable()==true);    

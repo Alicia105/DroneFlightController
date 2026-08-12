@@ -5,15 +5,15 @@
 #include "../../../sensors/include/imu.hpp"
 #include "../../../../shared/communication/include/packet.hpp"
 #include "../include/uart_serializer.hpp"
-#include "../include/virtual_uart.hpp"
+#include "../include/uart_channel.hpp"
 #include "../include/uart_driver.hpp"
 
 using Catch::Matchers::WithinAbs;
 using namespace std;
 
 TEST_CASE("Transmission via UART Driver", "[UART Driver]"){
-    VirtualUART ch;
-    VirtualUART& channel=ch;
+    UARTChannel ch;
+    UARTChannel& channel=ch;
     UARTDriver driver(channel);
 
     ImuPacket packet{};
@@ -40,8 +40,8 @@ TEST_CASE("Transmission via UART Driver", "[UART Driver]"){
 }
 
 TEST_CASE("Reading via UART Driver", "[UART Driver]"){
-    VirtualUART ch;
-    VirtualUART& channel=ch;
+    UARTChannel ch;
+    UARTChannel& channel=ch;
     UARTDriver driver(channel);
     UARTSerializer serializer;
 
@@ -72,8 +72,8 @@ TEST_CASE("Reading via UART Driver", "[UART Driver]"){
 }
 
 TEST_CASE("Transmission and Reading back via UART Driver", "[UART Driver]"){
-    VirtualUART ch;
-    VirtualUART& channel=ch;
+    UARTChannel ch;
+    UARTChannel& channel=ch;
     UARTDriver driver(channel);
 
     ImuPacket packet{};

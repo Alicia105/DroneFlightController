@@ -74,7 +74,7 @@ set(SHARED_DIR
 set(COMMUNICATION_SOURCES
     ${COMMUNICATION_DIR}/packet_builder.cpp
     ${COMMUNICATION_DIR}/packet_validator.cpp
-    ${COMMUNICATION_DIR}/virtual_uart.cpp
+    ${COMMUNICATION_DIR}/uart_channel.cpp
     ${COMMUNICATION_DIR}/uart_serializer.cpp
     ${COMMUNICATION_DIR}/uart_driver.cpp
 
@@ -101,7 +101,7 @@ set(SHARED_SOURCES
 
 set(FIRMWARE_SOURCES
     ${FIRMWARE_DIR}/common/src/freertos_objects.cpp
-    ${FIRMWARE_DIR}/tasks/src/sensortask.cpp
+    ${FIRMWARE_DIR}/tasks/src/physicstask.cpp
     ${FIRMWARE_DIR}/tasks/src/controllertask.cpp
     ${FIRMWARE_DIR}/tasks/src/communicationtask.cpp
     ${FIRMWARE_DIR}/tasks/src/actuatortask.cpp

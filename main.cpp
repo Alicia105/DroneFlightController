@@ -1,15 +1,16 @@
 #include <iostream>
 #include "simulator/communication/uart/include/uart_serializer.hpp"
-#include "simulator/communication/uart/include/virtual_uart.hpp"
+#include "simulator/communication/uart/include/uart_channel.hpp"
 #include "simulator/communication/uart/include/uart_driver.hpp"
 #include "simulator/communication/uart/include/packet_builder.hpp"
 #include "simulator/communication/uart/include/packet_validator.hpp"
 
 #include "external/FreeRTOS/Source/include/FreeRTOS.h"
 #include "firmware/common/include/freertos_objects.hpp"
-#include "firmware/tasks/include/sensortask.hpp"
+#include "firmware/tasks/include/physicstask.hpp"
 #include "firmware/tasks/include/controllertask.hpp"
 #include "firmware/tasks/include/actuatortask.hpp"
+#include "firmware/tasks/include/communicationtask.hpp"
 
 
 using namespace std;
@@ -176,14 +177,26 @@ int main(){
     //mutex
 
     imuQueue = xQueueCreate(10, sizeof(ImuPacket));
+    txQueue = xQueueCreate(10, sizeof(queue<uint8_t>));
+    rxQueue = xQueueCreate(10, sizeof(queue<uint8_t>));
+
 
     if (imuQueue == nullptr){
         cerr << "Failed to create IMU queue" << endl;
         return 1;
     }
+     if (txQueue == nullptr){
+        cerr << "Failed to create tx queue" << endl;
+        return 1;
+    }
+     if (rxQueue == nullptr){
+        cerr << "Failed to create rx queue" << endl;
+        return 1;
+    }
 
-    xTaskCreate(sensorTask,"SensorTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
-    xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,nullptr,3,nullptr);
+    xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
+    xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
+    //xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,nullptr,3,nullptr);
     
     vTaskStartScheduler();
 

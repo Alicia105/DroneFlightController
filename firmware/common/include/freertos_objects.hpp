@@ -32,4 +32,8 @@
 
 extern  QueueHandle_t imuQueue;
 
+extern QueueHandle_t txQueue;
+
+extern QueueHandle_t rxQueue;
+
 #endif
