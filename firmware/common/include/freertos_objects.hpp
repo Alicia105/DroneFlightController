@@ -8,6 +8,8 @@
 #include "../../../external/FreeRTOS/Source/include/event_groups.h"
 #include "../../../external/FreeRTOS/Source/include/semphr.h"
 #include "../../../shared/state/include/dronestate.hpp"
+#include "../../../simulator/motion/include/motiongenerator.hpp"
+#include "../../../simulator/sensors/include/imu.hpp"
 #include "../../../simulator/communication/uart/include/uart_driver.hpp"
 #include "../../../simulator/communication/uart/include/uart_channel.hpp"
 #include "../../../simulator/communication/uart/include/uart_serializer.hpp"
@@ -36,6 +38,17 @@
 #include "external/FreeRTOS/Source/include/timers.h"
 */
 
+struct CommunicationTaskParameters{
+    UARTDriver* driver;
+};
+
+struct PhysicsTaskParameters{
+    DroneState* droneState;
+    IMU* imu;
+    MotionGenerator* motionGen;
+};
+    
+
 extern  QueueHandle_t imuQueue;
 
 extern QueueHandle_t txQueue;
@@ -45,14 +58,6 @@ extern QueueHandle_t txQueue;
 extern SemaphoreHandle_t droneStateMutex;
 
 extern SemaphoreHandle_t UARTMutex;
-
-DroneState droneState;
-DroneState & drone = droneState;
-
-UARTChannel ch1(txQueue);
-UARTChannel& channel1 = ch1;
-UARTDriver driver1(channel1);
-
 
 
 #endif

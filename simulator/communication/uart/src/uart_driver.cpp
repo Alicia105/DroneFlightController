@@ -42,3 +42,16 @@ void UARTDriver::writeFreeRTOS(const ImuPacket& packet){
     return;
 }
 
+
+/*void UARTDriver::writeFreeRTOS(const ImuPacket& packet){
+    cout << "[UARTDriver] Before serialize" << endl;
+
+    vector<uint8_t> data = serializer.serialize(packet);
+
+    cout << "[UARTDriver] After serialize, size = "
+         << data.size() << endl;
+
+    channel.transmitFreeRTOS(data);
+
+    cout << "[UARTDriver] After transmitFreeRTOS" << endl;
+}*/

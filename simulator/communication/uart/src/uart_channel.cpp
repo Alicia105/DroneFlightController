@@ -65,11 +65,26 @@ uint8_t UARTChannel::receiveByteFreeRTOS(){
 }
 
 
-void UARTChannel::transmitFreeRTOS(vector<uint8_t>& data){
+void UARTChannel::transmitFreeRTOS(const vector<uint8_t>& data){
     for(int i=0;i<data.size();i++){
         transmitByteFreeRTOS(data[i]);
     }
 }
+
+/*void UARTChannel::transmitFreeRTOS(const vector<uint8_t>& data){
+    cout << "[UARTChannel] Starting transmission" << endl;
+
+    for (uint8_t byte : data)
+    {
+        cout << "[UARTChannel] Sending byte: "<< static_cast<int>(byte) << endl;
+
+        BaseType_t result = xQueueSend(txQueue,&byte,portMAX_DELAY);
+
+        cout << "[UARTChannel] xQueueSend returned: "<< result << endl;
+    }
+
+    cout << "[UARTChannel] Transmission finished" << endl;
+}*/
 
 vector<uint8_t> UARTChannel::receiveFreeRTOS(){
     vector<uint8_t> received;

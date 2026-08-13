@@ -7,21 +7,16 @@ using namespace std;
 Cette tâche représente le travail qui serait effectué par le microcontrôleur pour récupérer les données des capteurs.
 */
 void physicsTask(void* parameter){
-    (void)parameter;
-    float g = 9.81;
-    IMU imu;
-    MotionGenerator motionGen;
+    
+    auto* param =static_cast<PhysicsTaskParameters*>(parameter);
+
+    IMU& imu = *param->imu;
+    MotionGenerator& motionGen = *param->motionGen;
+    DroneState& drone = *param->droneState;
+
     PacketBuilder builder;
     PacketValidator packetValidator;
 
-    //sensors implementation
-    imu.setAccelSensorSaturation(-2*g,2*g);
-    imu.setGyroSensorSaturation(-250,250);
-    
-    //motiongenerator implementation
-    float dt=1/100;
-    motionGen.setDeltaTime(dt);
-    
     while (true){
         xSemaphoreTake(droneStateMutex, portMAX_DELAY);
         motionGen.RollAndPitch(drone,3,4,5);

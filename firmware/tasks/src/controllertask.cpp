@@ -16,18 +16,21 @@ using namespace std;
  */
 
 void controllerTask(void* parameter){
-    (void)parameter;
+    //(void)parameter;
     PacketValidator packetValidator;
+    auto* params =static_cast<CommunicationTaskParameters*>(parameter);
+
+    UARTDriver& driver = *params->driver;
 
     while (true){
         //xSemaphoreTake(UARTMutex, portMAX_DELAY);
-        ImuPacket packet = driver1.readFreeRTOS();
+        ImuPacket packet = driver.readFreeRTOS();
         //xSemaphoreGive(UARTMutex);   
         
         bool isPacketValid=packetValidator.validate(packet);
-            if(isPacketValid){
-                cout<< "[Controller] IMU: "<< "ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< "wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<<endl;
-            }      
+        if(isPacketValid){
+            cout<< "[Controller] IMU: "<< "ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< "wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<<endl;
+        }      
         cout << "[ControllerTask] Updating controller ..." << endl;
         vTaskDelay(pdMS_TO_TICKS(20));
     }

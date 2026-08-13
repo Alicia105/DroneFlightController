@@ -1,4 +1,11 @@
 #include <iostream>
+
+#include "simulator/sensors/include/imu.hpp"
+#include "simulator/sensors/include/sensorSaturation.hpp"
+#include "simulator/sensors/include/sensorError.hpp"
+#include "simulator/motion/include/motiongenerator.hpp"
+#include "shared/state/include/dronestate.hpp"
+
 #include "simulator/communication/uart/include/uart_serializer.hpp"
 #include "simulator/communication/uart/include/uart_channel.hpp"
 #include "simulator/communication/uart/include/uart_driver.hpp"
@@ -71,88 +78,6 @@ int main(){
 }*/
 
 
-/*int main(){
-
-    //declarations
-    float g = 9.81;
-    IMU imu;
-    DroneState droneState;
-    DroneState & drone = droneState;
-    MotionGenerator motionGen;
-
-    VirtualUART ch;
-    VirtualUART& channel=ch;
-
-    UARTDriver driver(channel);
-    PacketBuilder packetBuilder;
-    PacketValidator packetValidator;
-
-    ImuPacket packet{};
-
-    //sensors implementation
-    imu.setAccelSensorSaturation(-2*g,2*g);
-    imu.setGyroSensorSaturation(-250,250);
-  
-    //motiongenerator implementation
-    float dt=0.1;
-    float simulationTime=1;
-    motionGen.setSimulationTime(simulationTime);
-    motionGen.setDeltaTime(dt);
-
-    //motiongenerator start
-    cout<<"------------------------Start------------------------"<<endl;
-    motionGen.printMotionGeneratorData();
-
-    //set drone start position
-    drone.setPosition(1,2,3);
-    drone.setVelocity(1,1,1);
-
-    while(motionGen.getCurrentTime()<=motionGen.getSimulationTime()){
-        //move function
-        motionGen.RollAndPitch(drone,3,4,5);
-        
-        cout<<"--------------------t ="<<motionGen.getCurrentTime()<<" --------------------"<<endl;
-        motionGen.printMotionGeneratorData();
-        cout<<"-------------------Drone data--------------------"<<endl;
-        drone.printFullDroneStateData();
-
-        cout<<"-------------------IMU--------------------"<<endl;
-        imu.updateMeasures(drone);
-        imu.printAccelerometerData();
-        imu.printGyroscopeData();
-        motionGen.update();
-
-        //ImuPacket
-        /*ImuPacket packet=setFromIMU(imu);
-        packet.header = 0xAA;
-        packet.packetID = 0x01;
-        packet.payloadSize = 24;
-        packet.timestamp = 0x00111101;
-        packet.checksum = 0x0B02;*/
-
-       /*ImuPacket packet=packetBuilder.createImuPacket(imu);
-        bool isPacketAvailable=packetValidator.validate(packet);
-        if(isPacketAvailable){
-            driver.write(packet);
-            ImuPacket pck=driver.read();
-            cout<<"-------------------ImuPacket--------------------"<<endl;
-            printImuPacket(pck);
-        }
-    }
-
-    cout<<"--------------------t ="<<motionGen.getCurrentTime()<<" --------------------"<<endl;
-    motionGen.printMotionGeneratorData();
-    cout<<"-------------------Drone--------------------"<<endl;
-    drone.printFullDroneStateData();
-
-    cout<<"-------------------IMU--------------------"<<endl;
-    imu.updateMeasures(drone);
-    imu.printAccelerometerData();
-    imu.printGyroscopeData();
-
-
-    return 0;
-}*/
 
 extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,char* pcTaskName){
     (void)xTask;
@@ -171,22 +96,17 @@ extern "C" void vApplicationMallocFailedHook(){
 }
 
 
-int main(){
 
-    
-    //set drone start position
-    drone.setPosition(1,2,3);
-    drone.setVelocity(1,1,1);
-   
+int main(){
+    float g = 9.81;
+
     //queue
     imuQueue = xQueueCreate(10, sizeof(ImuPacket));
     txQueue = xQueueCreate(340, sizeof(uint8_t));
-    //rxQueue = xQueueCreate(340, sizeof(uint8_t));
-
+    
     //mutex
     droneStateMutex = xSemaphoreCreateMutex();    
-    UARTMutex = xSemaphoreCreateMutex();    
-
+    
     if (imuQueue == nullptr){
         cerr << "Failed to create IMU queue" << endl;
         return 1;
@@ -203,19 +123,35 @@ int main(){
         cerr << "Failed to create dronestate mutex" << endl;
         return 1;
     }
-    if (UARTMutex == nullptr){
-        cerr << "Failed to create uart mutex" << endl;
-        return 1;
-    }
+  
+    UARTChannel ch1(txQueue);
+    UARTChannel& channel1 = ch1;
+    UARTDriver driver1(channel1);
+
+    IMU imu;
+    MotionGenerator motionGen;
     
+    DroneState droneState;
+    DroneState & drone = droneState;
 
-    //UARTChannel ch2(rxQueue);
-    //UARTChannel& channel2 = ch2;
-    //UARTDriver driver2(channel2);
+    //sensors implementation
+    imu.setAccelSensorSaturation(-2*g,2*g);
+    imu.setGyroSensorSaturation(-250,250);
+    
+    //motiongenerator implementation
+    float dt=0.01f;
+    motionGen.setDeltaTime(dt);
+    
+    //set drone start position
+    droneState.setPosition(1,2,3);
+    droneState.setVelocity(1,1,1);
 
-    xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
-    xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
-    xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,nullptr,3,nullptr);
+    CommunicationTaskParameters communicationParams{&driver1};
+    PhysicsTaskParameters physicsParams{&droneState,&imu,&motionGen};
+
+    xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,&physicsParams,3,nullptr);
+    xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,&communicationParams,2,nullptr);
+    xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,&communicationParams,1,nullptr);
     
     vTaskStartScheduler();
 

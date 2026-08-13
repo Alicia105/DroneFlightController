@@ -5,8 +5,8 @@
 #include <vector>
 #include <queue>
 #include "../../../../shared/communication/include/packet.hpp"
-#include "../../../external/FreeRTOS/Source/include/FreeRTOS.h"
-#include "../../../external/FreeRTOS/Source/include/semphr.h"
+#include "../../../../external/FreeRTOS/Source/include/FreeRTOS.h"
+#include "../../../../external/FreeRTOS/Source/include/semphr.h"
 #include "uart_serializer.hpp"
 
 
@@ -43,7 +43,7 @@ class UARTChannel{//transport bytes
 
         uint8_t receiveByteFreeRTOS();
 
-        void transmitFreeRTOS(std::vector<uint8_t>& data);
+        void transmitFreeRTOS(const std::vector<uint8_t>& data);
 
         std::vector<uint8_t> receiveFreeRTOS();
 
