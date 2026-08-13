@@ -10,8 +10,6 @@ void physicsTask(void* parameter){
     (void)parameter;
     float g = 9.81;
     IMU imu;
-    DroneState droneState;
-    DroneState & drone = droneState;
     MotionGenerator motionGen;
     PacketBuilder builder;
     PacketValidator packetValidator;
@@ -23,14 +21,13 @@ void physicsTask(void* parameter){
     //motiongenerator implementation
     float dt=1/100;
     motionGen.setDeltaTime(dt);
-
-    //set drone start position
-    drone.setPosition(1,2,3);
-    drone.setVelocity(1,1,1);
-
+    
     while (true){
+        xSemaphoreTake(droneStateMutex, portMAX_DELAY);
         motionGen.RollAndPitch(drone,3,4,5);
         imu.updateMeasures(drone);
+        xSemaphoreGive(droneStateMutex);
+
         motionGen.update();
 
         ImuPacket packet = builder.createImuPacket(imu);

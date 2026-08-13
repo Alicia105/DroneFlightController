@@ -4,6 +4,7 @@
 using namespace std;
 
 UARTChannel::UARTChannel():baudRate(115200){}//transport bytes
+UARTChannel::UARTChannel(QueueHandle_t& queue):txQueue(queue),baudRate(115200){}//transport bytes
 UARTChannel::~UARTChannel(){}
 
 //getters
@@ -49,4 +50,31 @@ size_t UARTChannel::size(){
 
 bool UARTChannel::dataAvailable(){
     return !txBuffer.empty();
+}
+
+//via FreeRTOS
+
+void UARTChannel::transmitByteFreeRTOS(uint8_t data){
+    xQueueSend(txQueue,&data,portMAX_DELAY);
+}
+
+uint8_t UARTChannel::receiveByteFreeRTOS(){
+    uint8_t result;
+    xQueueReceive(txQueue, &result, portMAX_DELAY);
+    return result;    
+}
+
+
+void UARTChannel::transmitFreeRTOS(vector<uint8_t>& data){
+    for(int i=0;i<data.size();i++){
+        transmitByteFreeRTOS(data[i]);
+    }
+}
+
+vector<uint8_t> UARTChannel::receiveFreeRTOS(){
+    vector<uint8_t> received;
+    for(int i=0;i<IMU_PACKET_SIZE;i++){
+        received.push_back(receiveByteFreeRTOS());
+    }
+    return received;
 }

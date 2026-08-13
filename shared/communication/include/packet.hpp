@@ -7,6 +7,7 @@
 #include "../../../simulator/sensors/include/imu.hpp"
 
 constexpr size_t IMU_PACKET_SIZE = 34;
+
 typedef struct ImuPacket{
 
     uint8_t header;      // 0xAA

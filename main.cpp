@@ -171,15 +171,21 @@ extern "C" void vApplicationMallocFailedHook(){
 }
 
 
-
 int main(){
+
+    
+    //set drone start position
+    drone.setPosition(1,2,3);
+    drone.setVelocity(1,1,1);
    
-    //mutex
-
+    //queue
     imuQueue = xQueueCreate(10, sizeof(ImuPacket));
-    txQueue = xQueueCreate(10, sizeof(queue<uint8_t>));
-    rxQueue = xQueueCreate(10, sizeof(queue<uint8_t>));
+    txQueue = xQueueCreate(340, sizeof(uint8_t));
+    //rxQueue = xQueueCreate(340, sizeof(uint8_t));
 
+    //mutex
+    droneStateMutex = xSemaphoreCreateMutex();    
+    UARTMutex = xSemaphoreCreateMutex();    
 
     if (imuQueue == nullptr){
         cerr << "Failed to create IMU queue" << endl;
@@ -189,14 +195,27 @@ int main(){
         cerr << "Failed to create tx queue" << endl;
         return 1;
     }
-     if (rxQueue == nullptr){
+    /*if (rxQueue == nullptr){
         cerr << "Failed to create rx queue" << endl;
         return 1;
+    }*/
+    if (droneStateMutex == nullptr){
+        cerr << "Failed to create dronestate mutex" << endl;
+        return 1;
     }
+    if (UARTMutex == nullptr){
+        cerr << "Failed to create uart mutex" << endl;
+        return 1;
+    }
+    
+
+    //UARTChannel ch2(rxQueue);
+    //UARTChannel& channel2 = ch2;
+    //UARTDriver driver2(channel2);
 
     xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
     xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,nullptr,2,nullptr);
-    //xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,nullptr,3,nullptr);
+    xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,nullptr,3,nullptr);
     
     vTaskStartScheduler();
 

@@ -12,6 +12,10 @@
 #include "../../../simulator/communication/uart/include/packet_builder.hpp"
 #include "../../../simulator/communication/uart/include/packet_validator.hpp"
 
+
+#include "../../../external/FreeRTOS/Source/include/FreeRTOS.h"
+#include "../../common/include/freertos_objects.hpp"
+
 void communicationTask(void* parameter);
 
 #endif // COMMUNICATIONTASK_HPP

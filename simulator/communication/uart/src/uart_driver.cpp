@@ -28,3 +28,17 @@ void UARTDriver::write(const ImuPacket& packet){
     return;
 }
 
+//via FreeRTOS
+
+ImuPacket UARTDriver::readFreeRTOS(){
+    vector<uint8_t> data = channel.receiveFreeRTOS();
+    return serializer.deserialize(data);
+}
+
+
+void UARTDriver::writeFreeRTOS(const ImuPacket& packet){
+    vector<uint8_t> data = serializer.serialize(packet);
+    channel.transmitFreeRTOS(data);
+    return;
+}
+

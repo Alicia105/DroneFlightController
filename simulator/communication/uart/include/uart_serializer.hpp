@@ -4,7 +4,7 @@
 #include <vector>
 #include "../../../../shared/communication/include/packet.hpp"
 
-class UARTSerializer{
+class UARTSerializer{//all operations to serialize/deserialize an ImuPacket
     
     public:
     UARTSerializer();//convert packet to UART and back

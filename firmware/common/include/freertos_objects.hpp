@@ -5,6 +5,12 @@
 #include "../../../external/FreeRTOS/Source/include/queue.h"
 #include "../../../external/FreeRTOS/Source/include/task.h"
 #include "../../../external/FreeRTOS/Source/portable/MSVC-MingW/portmacro.h"
+#include "../../../external/FreeRTOS/Source/include/event_groups.h"
+#include "../../../external/FreeRTOS/Source/include/semphr.h"
+#include "../../../shared/state/include/dronestate.hpp"
+#include "../../../simulator/communication/uart/include/uart_driver.hpp"
+#include "../../../simulator/communication/uart/include/uart_channel.hpp"
+#include "../../../simulator/communication/uart/include/uart_serializer.hpp"
 
 //for FreeRTOS
 //#include "external/FreeRTOS/Source//include/FreeRTOSConfig.h"
@@ -34,6 +40,19 @@ extern  QueueHandle_t imuQueue;
 
 extern QueueHandle_t txQueue;
 
-extern QueueHandle_t rxQueue;
+//extern QueueHandle_t rxQueue;
+
+extern SemaphoreHandle_t droneStateMutex;
+
+extern SemaphoreHandle_t UARTMutex;
+
+DroneState droneState;
+DroneState & drone = droneState;
+
+UARTChannel ch1(txQueue);
+UARTChannel& channel1 = ch1;
+UARTDriver driver1(channel1);
+
+
 
 #endif

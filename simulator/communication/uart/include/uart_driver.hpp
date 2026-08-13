@@ -20,6 +20,12 @@ class UARTDriver{//interface to write/read packets
         UARTSerializer getSerializer();
         ImuPacket read();
         void write(const ImuPacket& packet);
+
+        //via FreeRTOS
+        
+        ImuPacket readFreeRTOS();
+        void writeFreeRTOS(const ImuPacket& packet);
+
         
 };
 
