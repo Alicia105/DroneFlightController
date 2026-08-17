@@ -96,6 +96,8 @@ set(SENSORS_SOURCES
 
 set(SHARED_SOURCES
     ${SHARED_DIR}/state/src/dronestate.cpp
+    ${SHARED_DIR}/state/src/estimation.cpp
+    ${SHARED_DIR}/state/src/motorcommand.cpp
     ${SHARED_DIR}/communication/src/packet.cpp
 )
 
@@ -126,8 +128,9 @@ target_include_directories(DroneFlightController PRIVATE
     
     simulator/sensors/include
     simulator/motion/include    
-    simulator/communication/include
+    simulator/communication/uart/include
     shared/state/include
+    shared/communication/include
     firmware/common/include
     firmware/tasks/include              
 )

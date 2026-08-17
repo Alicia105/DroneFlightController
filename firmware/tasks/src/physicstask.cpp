@@ -16,6 +16,7 @@ void physicsTask(void* parameter){
 
     PacketBuilder builder;
     PacketValidator packetValidator;
+    int i = 0;
 
     while (true){
         xSemaphoreTake(droneStateMutex, portMAX_DELAY);
@@ -30,9 +31,10 @@ void physicsTask(void* parameter){
 
         if(isPacketValid){
             xQueueSend(imuQueue,&packet,portMAX_DELAY);
-            cout << "[PhysicsTask] Reading IMU ..." << endl;   
+            //cout << "[PhysicsTask] IMU measures #"<<i<<" generated..." <<endl;   
         }
-        cout << "[PhysicsTask] Sending IMU ..." << endl;        
+        //cout << "[PhysicsTask] Sending IMU #"<<i<<" generated..."<<endl;       
+        i++; 
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

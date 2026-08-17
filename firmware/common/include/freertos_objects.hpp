@@ -48,16 +48,23 @@ struct PhysicsTaskParameters{
     MotionGenerator* motionGen;
 };
     
+struct ControllerTaskParameters{
+    UARTDriver* driver;
+    DroneState* droneState;
+   // MotorCommand* motorCommand;
+};
+
+struct ActuatorTaskParameters{
+    DroneState* droneState;
+    //MotorCommand* motorCommand;
+};
 
 extern  QueueHandle_t imuQueue;
 
 extern QueueHandle_t txQueue;
 
-//extern QueueHandle_t rxQueue;
+extern QueueHandle_t motorCommandQueue;
 
 extern SemaphoreHandle_t droneStateMutex;
-
-extern SemaphoreHandle_t UARTMutex;
-
 
 #endif

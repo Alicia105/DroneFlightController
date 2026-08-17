@@ -3,7 +3,7 @@
 
 using namespace std;
 
-DroneState::DroneState() {
+DroneState::DroneState():weight(0) {
     position = vector<float>(3, 0); // Initialize position to (0, 0, 0)
     velocity = vector<float>(3, 0); //vx,vy,vz
     acceleration = vector<float>(3, 0); //ax,ay,az
@@ -54,6 +54,11 @@ void DroneState::setAngularAcceleration(float x, float y, float z) {
     angularAcceleration[2]=z;
 }
 
+void DroneState::setWeight(float w) {
+    weight=w;
+}
+
+
 //Getters-all check
 vector<float> DroneState::getPosition() {
     return position;
@@ -83,6 +88,10 @@ vector<float> DroneState::getAngularVelocity() {
 vector<float> DroneState::getAngularAcceleration() {
     return angularAcceleration;
 
+}
+
+float DroneState::getWeight() {
+    return weight;
 }
 
 //Print-all check
@@ -118,3 +127,4 @@ void DroneState::printFullDroneStateData(){
     cout<<"Angular Velocity : Wx = "<<angularVelocity[0]<<" , Wy = "<<angularVelocity[1]<<", Wz = "<<angularVelocity[2]<<endl;
     cout<<"Angular Acceleration : awx = "<<angularAcceleration[0]<<" , awy = "<<angularAcceleration[1]<<", awz = "<<angularAcceleration[2]<<endl;
 }
+

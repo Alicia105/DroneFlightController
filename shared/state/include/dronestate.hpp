@@ -3,9 +3,11 @@
 
 #include <vector>
 
+
 class DroneState {
     // DroneState class implementation
     private:
+        float weight; //in kg
         std::vector<float> position;
         std::vector<float> velocity;
         std::vector<float> acceleration;
@@ -28,12 +30,15 @@ class DroneState {
         void setAngularVelocity(float x, float y, float z);
         void setAngularAcceleration(float x, float y, float z);
 
+        void setWeight(float w);
+
         std::vector<float> getPosition();
         std::vector<float> getVelocity();
         std::vector<float> getAcceleration();
         std::vector<float> getOrientation();
         std::vector<float> getAngularVelocity();
-        std::vector<float> getAngularAcceleration();     
+        std::vector<float> getAngularAcceleration();
+        float getWeight();
         
         void printPosition();
         void printVelocity();
@@ -42,6 +47,11 @@ class DroneState {
         void printAngularVelocity();
         void printAngularAcceleration();
         void printFullDroneStateData();
+
+        //void computePosition(const ImuPacket& imu,float dt);
+        //void applyMotorCommand(MotorCommand& commands);
+        void computeError(const DroneState& desiredState, const DroneState& estimatedState);
+        //void applyMotorCommand(MotorCommand& commands);
 
 };
 

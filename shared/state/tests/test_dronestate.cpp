@@ -6,6 +6,14 @@
 
 using namespace std;
 
+TEST_CASE("Weight implementation","[Drone state]"){
+    DroneState d;
+
+    REQUIRE(d.getWeight()==0);
+    d.setWeight(3);
+    REQUIRE(d.getWeight()==3);  
+}
+
 TEST_CASE("Position vector implementation","[Drone state]"){
     DroneState d;
 

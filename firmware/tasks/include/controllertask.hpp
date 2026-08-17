@@ -7,6 +7,8 @@
 #include "../../../simulator/sensors/include/sensorError.hpp"
 #include "../../../simulator/motion/include/motiongenerator.hpp"
 #include "../../../shared/state/include/dronestate.hpp"
+#include "../../../shared/state/include/estimation.hpp"
+#include "../../../shared/state/include/motorcommand.hpp"
 #include "../../../shared/communication/include/packet.hpp"
 #include "../../../simulator/communication/uart/include/uart_serializer.hpp"
 #include "../../../simulator/communication/uart/include/uart_channel.hpp"

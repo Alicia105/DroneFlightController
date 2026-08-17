@@ -10,9 +10,9 @@ void communicationTask(void* parameter)
     UARTDriver& driver = *params->driver;
 
     PacketValidator packetValidator;
+    int i = 0;
 
-    while (true)
-    {
+    while (true){
         ImuPacket packet{};
 
         if (xQueueReceive(imuQueue, &packet, portMAX_DELAY) == pdTRUE)
@@ -21,13 +21,14 @@ void communicationTask(void* parameter)
 
             if (isPacketValid)
             {
-                cout << "[CommunicationTask] Received IMU: "<< "ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< " wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<< endl;
+                //cout << "[CommunicationTask] Received IMU #"<<i<< ": ax=" << packet.ax<< " ay=" << packet.ay<< " az=" << packet.az<< " wx=" << packet.wx<< " wy=" << packet.wy<< " wz=" << packet.wz<< endl;
 
                 driver.writeFreeRTOS(packet);
             }
         }
 
-        cout << "[CommunicationTask] Sending data to UART ..." << endl;
+        //cout << "[CommunicationTask] Sending data #"<<i<<" to UART ..." << endl;
+        i++;
 
         vTaskDelay(pdMS_TO_TICKS(20));
     }

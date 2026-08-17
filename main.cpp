@@ -4,7 +4,9 @@
 #include "simulator/sensors/include/sensorSaturation.hpp"
 #include "simulator/sensors/include/sensorError.hpp"
 #include "simulator/motion/include/motiongenerator.hpp"
+
 #include "shared/state/include/dronestate.hpp"
+#include "shared/state/include/motorcommand.hpp"
 
 #include "simulator/communication/uart/include/uart_serializer.hpp"
 #include "simulator/communication/uart/include/uart_channel.hpp"
@@ -78,7 +80,6 @@ int main(){
 }*/
 
 
-
 extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,char* pcTaskName){
     (void)xTask;
     (void)pcTaskName;
@@ -96,13 +97,13 @@ extern "C" void vApplicationMallocFailedHook(){
 }
 
 
-
 int main(){
     float g = 9.81;
 
     //queue
     imuQueue = xQueueCreate(10, sizeof(ImuPacket));
     txQueue = xQueueCreate(340, sizeof(uint8_t));
+    motorCommandQueue = xQueueCreate(100, sizeof(MotorCommand));;
     
     //mutex
     droneStateMutex = xSemaphoreCreateMutex();    
@@ -115,10 +116,10 @@ int main(){
         cerr << "Failed to create tx queue" << endl;
         return 1;
     }
-    /*if (rxQueue == nullptr){
+    if (motorCommandQueue == nullptr){
         cerr << "Failed to create rx queue" << endl;
         return 1;
-    }*/
+    }
     if (droneStateMutex == nullptr){
         cerr << "Failed to create dronestate mutex" << endl;
         return 1;
@@ -132,7 +133,6 @@ int main(){
     MotionGenerator motionGen;
     
     DroneState droneState;
-    DroneState & drone = droneState;
 
     //sensors implementation
     imu.setAccelSensorSaturation(-2*g,2*g);
@@ -148,10 +148,13 @@ int main(){
 
     CommunicationTaskParameters communicationParams{&driver1};
     PhysicsTaskParameters physicsParams{&droneState,&imu,&motionGen};
+    ControllerTaskParameters controllerParams{&driver1,&droneState};
+    ActuatorTaskParameters actuatorParams{&droneState};
 
     xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,&physicsParams,3,nullptr);
     xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,&communicationParams,2,nullptr);
-    xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,&communicationParams,1,nullptr);
+    xTaskCreate(controllerTask,"ControllerTask",configMINIMAL_STACK_SIZE,&controllerParams,1,nullptr);
+    xTaskCreate(actuatorTask,"ActuatorTask",configMINIMAL_STACK_SIZE,&actuatorParams,1,nullptr);
     
     vTaskStartScheduler();
 
