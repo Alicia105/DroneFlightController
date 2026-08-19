@@ -133,6 +133,7 @@ int main(){
     MotionGenerator motionGen;
     
     DroneState droneState;
+    DroneState desiredState;
 
     //sensors implementation
     imu.setAccelSensorSaturation(-2*g,2*g);
@@ -146,10 +147,20 @@ int main(){
     droneState.setPosition(1,2,3);
     droneState.setVelocity(1,1,1);
 
+    desiredState.setPosition(3,3,3);
+    desiredState.setOrientation(10,2,3);
+
+    cout << "[Initial] Drone state :" ;
+    droneState.printFullDroneStateData();
+    cout << "[Initial] Desired state :" ;
+    desiredState.printFullDroneStateData();
+    
     CommunicationTaskParameters communicationParams{&driver1};
     PhysicsTaskParameters physicsParams{&droneState,&imu,&motionGen};
-    ControllerTaskParameters controllerParams{&driver1,&droneState};
+    ControllerTaskParameters controllerParams{&driver1,&droneState,&desiredState,};
     ActuatorTaskParameters actuatorParams{&droneState};
+
+    
 
     xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,&physicsParams,3,nullptr);
     xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,&communicationParams,2,nullptr);

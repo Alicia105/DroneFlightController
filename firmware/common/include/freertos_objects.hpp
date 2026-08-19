@@ -50,7 +50,8 @@ struct PhysicsTaskParameters{
     
 struct ControllerTaskParameters{
     UARTDriver* driver;
-    DroneState* droneState;
+    DroneState* original;
+    DroneState* desired;
    // MotorCommand* motorCommand;
 };
 

@@ -2,7 +2,9 @@
 #define DRONESTATE_HPP
 
 #include <vector>
+#include "../../communication/include/packet.hpp"
 
+//typedef ImuPacket struct ImuPacket;
 
 class DroneState {
     // DroneState class implementation
@@ -48,10 +50,10 @@ class DroneState {
         void printAngularAcceleration();
         void printFullDroneStateData();
 
-        //void computePosition(const ImuPacket& imu,float dt);
-        //void applyMotorCommand(MotorCommand& commands);
-        void computeError(const DroneState& desiredState, const DroneState& estimatedState);
-        //void applyMotorCommand(MotorCommand& commands);
+        void computePosition(const ImuPacket& imu,float dt);
+        void computeError(DroneState& desiredState,DroneState& estimatedState);
+        float normalizeAngle(float angle);
+         //void applyMotorCommand(MotorCommand& commands);
 
 };
 

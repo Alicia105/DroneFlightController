@@ -22,12 +22,14 @@ void physicsTask(void* parameter){
         xSemaphoreTake(droneStateMutex, portMAX_DELAY);
         motionGen.RollAndPitch(drone,3,4,5);
         imu.updateMeasures(drone);
+        //cout << "[PhysicsTask] Drone state :";
+        //drone.printFullDroneStateData();
         xSemaphoreGive(droneStateMutex);
 
         motionGen.update();
 
         ImuPacket packet = builder.createImuPacket(imu);
-        bool isPacketValid=packetValidator.validate(packet);
+        bool isPacketValid = packetValidator.validate(packet);
 
         if(isPacketValid){
             xQueueSend(imuQueue,&packet,portMAX_DELAY);

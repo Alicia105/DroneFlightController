@@ -37,5 +37,7 @@ class IMU : public Gyroscope, public Accelerometer {
         void setGyroSensorError(float mean,float sigma,float b);
 
         void updateMeasures(DroneState& drone);
+
+        
 };
 #endif // IMU_HPP

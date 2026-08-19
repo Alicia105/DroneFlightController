@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "../include/dronestate.hpp"
 
 using namespace std;
@@ -128,3 +129,99 @@ void DroneState::printFullDroneStateData(){
     cout<<"Angular Acceleration : awx = "<<angularAcceleration[0]<<" , awy = "<<angularAcceleration[1]<<", awz = "<<angularAcceleration[2]<<endl;
 }
 
+
+float DroneState::normalizeAngle(float angle){
+    angle = fmod(angle + 180.0f, 360.0f);
+
+    if (angle < 0)
+        angle += 360.0f;
+
+    return angle - 180.0f;
+}
+
+void DroneState::computePosition(const ImuPacket& imu, float dt){
+
+    vector<float> oldPosition = getPosition();
+    vector<float> oldVelocity = getVelocity();
+    vector<float> oldOrientation = getOrientation();
+    vector<float> oldAngularVelocity = getAngularVelocity();
+
+    float ax = imu.ax;
+    float ay = imu.ay;
+    float az = imu.az;
+
+    setAcceleration(ax,ay,az);
+    
+    float vx = oldVelocity[0]+ax * dt;
+    float vy = oldVelocity[1]+ay * dt;
+    float vz = oldVelocity[2]+az * dt;
+
+    setVelocity(vx,vy,vz);
+
+    float x = oldPosition[0]+oldVelocity[0]*dt+0.5f*ax*dt*dt;
+    float y = oldPosition[1]+oldVelocity[1]*dt+0.5f*ay*dt*dt;
+    float z = oldPosition[2]+oldVelocity[2]*dt+0.5f*az*dt*dt;
+
+    setPosition(x,y,z);
+
+    float wx = imu.wx;
+    float wy = imu.wy;
+    float wz = imu.wz;
+
+    setAngularVelocity(wx,wy,wz);
+
+    float ox = oldOrientation[0]+wx * dt;
+    float oy = oldOrientation[1]+wy * dt;
+    float oz = oldOrientation[2]+wz * dt;
+
+    setOrientation(normalizeAngle(ox),normalizeAngle(oy),normalizeAngle(oz));
+
+    float awx = (wx-oldAngularVelocity[0])/dt;
+    float awy = (wy-oldAngularVelocity[1])/dt;
+    float awz = (wz-oldAngularVelocity[2])/dt;
+
+    setAngularAcceleration(awx,awy,awz);
+
+}
+
+void DroneState::computeError(DroneState& desiredState,DroneState& estimatedState){
+    
+    float x = desiredState.getPosition()[0]-estimatedState.getPosition()[0];
+    float y = desiredState.getPosition()[1]-estimatedState.getPosition()[1];
+    float z = desiredState.getPosition()[2]-estimatedState.getPosition()[2];
+
+    float vx = desiredState.getVelocity()[0]-estimatedState.getVelocity()[0];
+    float vy = desiredState.getVelocity()[1]-estimatedState.getVelocity()[1];
+    float vz = desiredState.getVelocity()[2]-estimatedState.getVelocity()[2];
+
+    float ax = desiredState.getAcceleration()[0]-estimatedState.getAcceleration()[0];
+    float ay = desiredState.getAcceleration()[1]-estimatedState.getAcceleration()[1];
+    float az = desiredState.getAcceleration()[2]-estimatedState.getAcceleration()[2];
+
+    float ox = desiredState.getOrientation()[0]-estimatedState.getOrientation()[0];
+    float oy = desiredState.getOrientation()[1]-estimatedState.getOrientation()[1];
+    float oz = desiredState.getOrientation()[2]-estimatedState.getOrientation()[2];
+
+    float wx = desiredState.getAngularVelocity()[0]-estimatedState.getAngularVelocity()[0];
+    float wy = desiredState.getAngularVelocity()[1]-estimatedState.getAngularVelocity()[1];
+    float wz = desiredState.getAngularVelocity()[2]-estimatedState.getAngularVelocity()[2];
+
+    float awx = desiredState.getAngularAcceleration()[0]-estimatedState.getAngularAcceleration()[0];
+    float awy = desiredState.getAngularAcceleration()[1]-estimatedState.getAngularAcceleration()[1];
+    float awz = desiredState.getAngularAcceleration()[2]-estimatedState.getAngularAcceleration()[2];
+
+    setPosition(x,y,z);
+    setVelocity(vx,vy,vz);
+    setAcceleration(ax,ay,az);
+
+    //setOrientation(ox,oy,oz);
+    setOrientation(normalizeAngle(ox),normalizeAngle(oy),normalizeAngle(oz));
+    setAngularVelocity(wx,wy,wz);
+    setAngularAcceleration(awx,awy,awz);
+
+}
+
+
+/*void DroneState::applyMotorCommand(MotorCommand& commands){
+    //   
+}*/

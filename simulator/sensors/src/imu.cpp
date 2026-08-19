@@ -72,7 +72,3 @@ void IMU::updateMeasures(DroneState& drone){
 }
 
 
-
-//write function to send datas via UART
-
-//write function to send datas via I2C

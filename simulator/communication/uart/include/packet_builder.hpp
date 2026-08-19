@@ -32,6 +32,8 @@ class PacketBuilder{
 
         static uint16_t computeChecksum(const ImuPacket& packet);
 
+        ImuPacket setFromIMU(IMU& imu);
+
 };
 
 #endif //PACKET_BUILDER_HPP

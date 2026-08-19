@@ -2,18 +2,7 @@
 
 using namespace std;
 
-ImuPacket setFromIMU(IMU& imu){
-    ImuPacket packet;
-    packet.ax=imu.getAx();
-    packet.ay=imu.getAy();
-    packet.az=imu.getAz();
 
-    packet.wx=imu.getWx();
-    packet.wy=imu.getWy();
-    packet.wz=imu.getWz();
-
-    return packet;
-}
 
 void printFloatBytes(float value){
     uint8_t* bytes = reinterpret_cast<uint8_t*>(&value);

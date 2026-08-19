@@ -16,10 +16,15 @@ using namespace std;
  */
 
 void controllerTask(void* parameter){
-    
+    auto* params = static_cast<ControllerTaskParameters*>(parameter);
+
     PacketValidator packetValidator;
-    auto* params = static_cast<CommunicationTaskParameters*>(parameter);
+    
     UARTDriver& driver = *params->driver;
+    DroneState& desiredState = *params->desired;
+    DroneState& originalState = *params->original;
+
+    
     int i = 0;
 
     while (true){
@@ -27,15 +32,7 @@ void controllerTask(void* parameter){
         MotorCommand commands{};
 
         DroneState estimated;
-        DroneState desiredState;
-
-        desiredState.setPosition(3,3,3);
-        //desiredState.setVelocity(1,2,3);
-        //desiredState.setAcceleration(1,2,3);
-
-        desiredState.setOrientation(10,2,3);
-        //desiredState.setAngularVelocity(1,2,3);
-        //desiredState.setAngularAcceleration(1,2,3);
+        DroneState error;
 
         bool isPacketValid=packetValidator.validate(packet);
 
@@ -77,27 +74,38 @@ void controllerTask(void* parameter){
         }*/
         
         if (isPacketValid){
-            cout << "[Controller] 1" << endl;
+            //cout << "[Controller] 1" << endl;
 
-            //xSemaphoreTake(droneStateMutex, portMAX_DELAY);
-            computePosition(estimated,packet,0.01f);
-            DroneState error = computeError(desiredState,estimated);
-            //xSemaphoreGive(droneStateMutex);
+            estimated.computePosition(packet,0.01f);
+            //error.computeError(desiredState,estimated);
+            error.computeError(originalState,estimated);
 
             MotorCommand commands{};
 
-            cout << "[Controller] 2" << endl;
+            //cout << "[Controller] 2" << endl;
+
+            cout << "[Controller] Original state :" ;
+            originalState.printFullDroneStateData();     
+
+            cout << "[Controller] Estimated state :" ;
+            estimated.printFullDroneStateData();
+
+            cout << "[Controller] Desired state :" ;
+            desiredState.printFullDroneStateData();
+
+            cout << "[Controller] Error computed :" ;
+            error.printFullDroneStateData();
 
             commands.motor1 = 10.0f;
             commands.motor2 = 0.5f;
             commands.motor3 = 0.7f;
             commands.motor4 = 3.4f;
 
-            cout << "[Controller] 3" << endl;
+            //cout << "[Controller] 3" << endl;
 
             BaseType_t ok = xQueueSend(motorCommandQueue,&commands,pdMS_TO_TICKS(100));
 
-            cout << "[Controller] 4 : " << ok << endl;
+           // cout << "[Controller] 4 : " << ok << endl;
         }
         
     }
