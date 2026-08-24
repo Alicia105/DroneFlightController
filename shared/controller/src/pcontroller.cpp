@@ -2,14 +2,14 @@
 #include "../include/pcontroller.hpp"
 
 PController::PController(){
-    Kp_throttle = 0;
+    Kp_thrust = 0;
     Kp_roll = 0;
     Kp_pitch = 0;
     Kp_yaw = 0;
 }
 
 PController::PController(float t, float r, float p, float y){
-    Kp_throttle = t;
+    Kp_thrust = t;
     Kp_roll = r;
     Kp_pitch = p;
     Kp_yaw = y;
@@ -18,8 +18,8 @@ PController::PController(float t, float r, float p, float y){
 PController::~PController(){}
 
 //getters
-float PController::getThrottle(){
-    return Kp_throttle;
+float PController::getThrust(){
+    return Kp_thrust;
 }
 
 float PController::getRoll(){
@@ -35,8 +35,8 @@ float PController::getYaw(){
 }
 
 //setters
-void PController::setThrottle(float t){
-    Kp_throttle = t;
+void PController::setThrust(float t){
+    Kp_thrust = t;
 }
 
 void PController::setRoll(float r){
@@ -52,8 +52,8 @@ void PController::setYaw(float y){
 }
 
 
-float PController::computeThrottle(float error){
-    return Kp_throttle * error;
+float PController::computeThrust(float error){
+    return Kp_thrust * error;
 }
 
 float PController::computeRoll(float error){

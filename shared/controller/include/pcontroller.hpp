@@ -6,7 +6,7 @@
 class PController {
     // PController class implementation
     private:
-        float Kp_throttle;
+        float Kp_thrust;
         float Kp_pitch;
         float Kp_roll;
         float Kp_yaw;
@@ -17,18 +17,18 @@ class PController {
         ~PController();
 
         //getters
-        float getThrottle();
+        float getThrust();
         float getRoll();
         float getPitch();
         float getYaw();
 
         //setters
-        void setThrottle(float t);
+        void setThrust(float t);
         void setRoll(float r);
         void setPitch(float p);
         void setYaw(float y);
 
-        float computeThrottle(float error);
+        float computeThrust(float error);
         float computeRoll(float error);
         float computePitch(float error);
         float computeYaw(float error);

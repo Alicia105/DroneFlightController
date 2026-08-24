@@ -8,6 +8,7 @@
 #include "shared/state/include/dronestate.hpp"
 
 #include "shared/controller/include/motorcommand.hpp"
+#include "shared/controller/include/motormixer.hpp"
 
 #include "simulator/communication/uart/include/uart_serializer.hpp"
 #include "simulator/communication/uart/include/uart_channel.hpp"

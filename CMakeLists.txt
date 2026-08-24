@@ -98,6 +98,7 @@ set(SHARED_SOURCES
     ${SHARED_DIR}/state/src/dronestate.cpp
     ${SHARED_DIR}/controller/src/pcontroller.cpp
     ${SHARED_DIR}/controller/src/motorcommand.cpp
+    ${SHARED_DIR}/controller/src/motormixer.cpp
     ${SHARED_DIR}/communication/src/packet.cpp
 )
 

@@ -9,5 +9,6 @@ typedef struct MotorCommand
     float motor4;
 }MotorCommand;
 
+void printMotorCommand(const  MotorCommand& command);
 
 #endif // MOTORCOMMAND_HPP

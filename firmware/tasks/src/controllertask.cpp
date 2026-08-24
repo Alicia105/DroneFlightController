@@ -1,5 +1,6 @@
 #include "../include/controllertask.hpp"
 
+
 using namespace std;
 
 /**
@@ -25,13 +26,13 @@ void controllerTask(void* parameter){
     DroneState& originalState = *params->original;
 
     PController pid(3,3,3,3);
+    MotorMixer motor;
     
     int i = 0;
 
     while (true){
         ImuPacket packet = driver.readFreeRTOS();
-        MotorCommand commands{};
-
+       
         DroneState estimated;
         DroneState error;
 
@@ -81,7 +82,6 @@ void controllerTask(void* parameter){
             error.computeError(desiredState,estimated);
             //error.computeError(originalState,estimated);
 
-            MotorCommand commands{};
 
             //cout << "[Controller] 2" << endl;
             //cout << "[Controller] Current real state :" ;
@@ -97,11 +97,7 @@ void controllerTask(void* parameter){
             //error.printFullDroneStateData();
 
             vector<float> errorOrientation = error.getOrientation();
-
-            commands.motor1 = pid.computeThrottle(10.0f);
-            commands.motor2 = pid.computeRoll(errorOrientation[0]);
-            commands.motor3 = pid.computePitch(errorOrientation[1]);
-            commands.motor4 = pid.computeYaw(errorOrientation[2]);
+            MotorCommand commands = motor.mix(pid.computeThrust(10.0f),pid.computeRoll(errorOrientation[0]),pid.computePitch(errorOrientation[1]),pid.computeYaw(errorOrientation[2]));
 
             //cout << "[Controller] 3" << endl;
 
