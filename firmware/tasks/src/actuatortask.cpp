@@ -16,14 +16,14 @@ void actuatorTask(void* parameter){
 
         BaseType_t ok = xQueueReceive(motorCommandQueue,&commands,portMAX_DELAY);
 
-        //cout << "[Actuator] Received : " << ok << endl;
+        cout << "[Actuator] Received " << ok << endl;
 
         //cout << "[ActuatorTask] Before xQueueReceive" << endl;
         if(ok == pdTRUE){
         //if(xQueueReceive(motorCommandQueue, &commands, portMAX_DELAY) == pdTRUE){
             //cout << "[ActuatorTask] After xQueueReceive" << endl;
-            //cout<< "[ActuatorTask] Motor Commands #"<<i<<" : m1=" << commands.motor1<< " m2=" << commands.motor2<< " m3=" << commands.motor3<< " m4=" << commands.motor4<<endl;
-            
+            //cout<< "[ActuatorTask] Motor Commands #"<<i<<" : throttle=" << commands.throttle<< " roll=" << commands.roll<< " pitch=" << commands.pitch<< " yaw=" << commands.yaw<<endl;
+            cout<< "[ActuatorTask] Motor Commands #"<<i<<" : m1=" << commands.motor1<< " m2=" << commands.motor2<< " m3=" << commands.motor3<< " m4=" << commands.motor4<<endl;
             //xSemaphoreTake(droneStateMutex, portMAX_DELAY);
             //droneState update via command
             //xSemaphoreGive(droneStateMutex);

@@ -24,6 +24,7 @@ void controllerTask(void* parameter){
     DroneState& desiredState = *params->desired;
     DroneState& originalState = *params->original;
 
+    PController pid(3,3,3,3);
     
     int i = 0;
 
@@ -77,29 +78,30 @@ void controllerTask(void* parameter){
             //cout << "[Controller] 1" << endl;
 
             estimated.computePosition(packet,0.01f);
-            //error.computeError(desiredState,estimated);
-            error.computeError(originalState,estimated);
+            error.computeError(desiredState,estimated);
+            //error.computeError(originalState,estimated);
 
             MotorCommand commands{};
 
             //cout << "[Controller] 2" << endl;
+            //cout << "[Controller] Current real state :" ;
+            //originalState.printFullDroneStateData();     
 
-            cout << "[Controller] Original state :" ;
-            originalState.printFullDroneStateData();     
+            //cout << "[Controller] Estimated state :" ;
+            //estimated.printFullDroneStateData();
 
-            cout << "[Controller] Estimated state :" ;
-            estimated.printFullDroneStateData();
+            //cout << "[Controller] Desired state :" ;
+            //desiredState.printFullDroneStateData();
 
-            cout << "[Controller] Desired state :" ;
-            desiredState.printFullDroneStateData();
+            //cout << "[Controller] Error computed :" ;
+            //error.printFullDroneStateData();
 
-            cout << "[Controller] Error computed :" ;
-            error.printFullDroneStateData();
+            vector<float> errorOrientation = error.getOrientation();
 
-            commands.motor1 = 10.0f;
-            commands.motor2 = 0.5f;
-            commands.motor3 = 0.7f;
-            commands.motor4 = 3.4f;
+            commands.motor1 = pid.computeThrottle(10.0f);
+            commands.motor2 = pid.computeRoll(errorOrientation[0]);
+            commands.motor3 = pid.computePitch(errorOrientation[1]);
+            commands.motor4 = pid.computeYaw(errorOrientation[2]);
 
             //cout << "[Controller] 3" << endl;
 

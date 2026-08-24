@@ -5,6 +5,13 @@
 #include "../../../sensors/include/imu.hpp"
 #include "../../../../shared/communication/include/packet.hpp"
 #include "../include/uart_serializer.hpp"
+#include "../include/packet_builder.hpp"
+
+
+#include "../../../../external/Catch2/include/catch_amalgamated.hpp"
+#include "../../../sensors/include/imu.hpp"
+#include "../../../../shared/communication/include/packet.hpp"
+#include "../include/uart_serializer.hpp"
 
 using Catch::Matchers::WithinAbs;
 using namespace std;
@@ -12,6 +19,7 @@ using namespace std;
 TEST_CASE("IMU Data fields", "[Packet]") {
     IMU i;
     IMU& imu=i;
+    PacketBuilder builder;
 
     imu.setAx(1);
     imu.setAy(2);
@@ -21,7 +29,7 @@ TEST_CASE("IMU Data fields", "[Packet]") {
     imu.setWy(12);
     imu.setWz(2);
 
-    ImuPacket packet=setFromIMU(imu);
+    ImuPacket packet=builder.setFromIMU(imu);
 
     packet.header=0xAA;
     packet.packetID=0x01;

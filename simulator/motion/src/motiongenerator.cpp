@@ -117,11 +117,11 @@ void MotionGenerator::RollAndPitch(DroneState& drone,float rollAmplitude,float p
 
 //Takeoff simplifié
 void MotionGenerator::takeOff(DroneState& drone){
-    float g=9.81;
+    float g=-9.81;
     if(currenTime<=2){
-        float az = 1;
+        float az = -g;
         float vz = drone.getVelocity()[2] + az*dt;
-        float z = drone.getPosition()[2] + vz*dt;
+        float z = drone.getPosition()[2] + drone.getVelocity()[2]*dt+0.5f*az*dt*dt;
 
         drone.setAcceleration(0,0,az);
         drone.setVelocity(0,0,vz);
@@ -131,7 +131,7 @@ void MotionGenerator::takeOff(DroneState& drone){
     else{
         float az = 0;
         float vz = drone.getVelocity()[2] + az*dt;
-        float z = drone.getPosition()[2] + vz*dt;
+        float z = drone.getPosition()[2] + drone.getVelocity()[2]*dt+0.5f*az*dt*dt;
 
         drone.setAcceleration(0,0,az);
         drone.setVelocity(0,0,vz);

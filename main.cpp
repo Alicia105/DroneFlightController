@@ -6,7 +6,8 @@
 #include "simulator/motion/include/motiongenerator.hpp"
 
 #include "shared/state/include/dronestate.hpp"
-#include "shared/state/include/motorcommand.hpp"
+
+#include "shared/controller/include/motorcommand.hpp"
 
 #include "simulator/communication/uart/include/uart_serializer.hpp"
 #include "simulator/communication/uart/include/uart_channel.hpp"
@@ -80,22 +81,6 @@ int main(){
 }*/
 
 
-extern "C" void vApplicationStackOverflowHook(TaskHandle_t xTask,char* pcTaskName){
-    (void)xTask;
-    (void)pcTaskName;
-
-    cerr << "FreeRTOS: stack overflow detected in task: "<< pcTaskName << endl;
-    while (true){
-    }
-}
-
-extern "C" void vApplicationMallocFailedHook(){
-    cerr << "FreeRTOS: malloc failed!" << endl;
-
-    while (true){
-    }
-}
-
 
 int main(){
     float g = 9.81;
@@ -144,10 +129,10 @@ int main(){
     motionGen.setDeltaTime(dt);
     
     //set drone start position
-    droneState.setPosition(1,2,3);
-    droneState.setVelocity(1,1,1);
+    droneState.setPosition(0,0,0);
+    //droneState.setVelocity(1,1,1);
 
-    desiredState.setPosition(3,3,3);
+    desiredState.setPosition(0,0,19.62);
     desiredState.setOrientation(10,2,3);
 
     cout << "[Initial] Drone state :" ;
@@ -160,7 +145,6 @@ int main(){
     ControllerTaskParameters controllerParams{&driver1,&droneState,&desiredState,};
     ActuatorTaskParameters actuatorParams{&droneState};
 
-    
 
     xTaskCreate(physicsTask,"PhysicsTask",configMINIMAL_STACK_SIZE,&physicsParams,3,nullptr);
     xTaskCreate(communicationTask,"CommunicationTask",configMINIMAL_STACK_SIZE,&communicationParams,2,nullptr);

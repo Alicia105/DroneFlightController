@@ -147,7 +147,7 @@ TEST_CASE("Takeoff", "[Motion Generator]")
 
     motion.takeOff(drone);
 
-    REQUIRE(drone.getAcceleration()[2] == 1);
+    REQUIRE_THAT(drone.getAcceleration()[2],WithinAbs(9.81,1e-6));
     REQUIRE(drone.getVelocity()[2] > 0);
     REQUIRE(drone.getPosition()[2] > 0);
 }
