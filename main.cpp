@@ -26,64 +26,8 @@
 
 using namespace std;
 
-/*template<typename T>
-void printMemory(const T& value)
-{
-    const uint8_t* bytes = reinterpret_cast<const uint8_t*>(&value);
 
-    cout << "Size : " << sizeof(T) << " bytes" << endl;
-
-    for(size_t i = 0; i < sizeof(T); i++)
-    {
-        cout << "Byte " << i << " : 0x"
-             << hex << setw(2) << setfill('0')
-             << static_cast<int>(bytes[i])
-             << endl;
-    }
-
-    cout << dec << endl;
-}
-
-int main(){
-    VirtualUART ch;
-    VirtualUART& channel=ch;
-    UARTDriver driver(channel);
-    UARTSerializer serializer;
-
-    ImuPacket packet{};
-
-    packet.header = 0xAA;
-    packet.packetID = 0x01;
-    packet.payloadSize = 24;
-
-    packet.timestamp = 0x00111101;
-    
-
-    packet.ax = 1.0f;
-    packet.ay = 2.0f;
-    packet.az = 5.5f;
-
-    packet.wx = 7.8f;
-    packet.wy = 12.0f;
-    packet.wz = 2.0f;
-
-    packet.checksum = 0x0B02;
-
-    vector<uint8_t> buffer = serializer.serialize(packet);
-    cout << "Serialized size = " << buffer.size() << endl;
-
-    channel.transmit(buffer);
-
-    cout << "Channel size = " << channel.size() << endl;
-
-    cout << "---------------In read()---------------" << endl;
-    ImuPacket reconstructed = driver.read();
-    
-}*/
-
-
-
-int main(){
+/*int main(){
     float g = 9.81;
 
     //queue
@@ -155,6 +99,98 @@ int main(){
     vTaskStartScheduler();
 
     cout << "Scheduler stopped!" << endl;
+
+    return 0;
+}*/
+
+
+int main(){
+    float g = 9.81;
+
+    UARTChannel ch1(txQueue);
+    UARTChannel& channel1 = ch1;
+    UARTDriver driver1(channel1);
+
+    PacketBuilder builder;
+    PacketValidator packetValidator;
+
+    IMU imu;
+    MotionGenerator motionGen;
+    
+    DroneState droneState;
+    DroneState desiredState;
+
+    DroneState estimated;
+    DroneState error;
+
+    PController pid(2,2,2,2);
+    MotorMixer motor;
+
+    //sensors implementation
+    imu.setAccelSensorSaturation(-2*g,2*g);
+    imu.setGyroSensorSaturation(-250,250);
+    
+    //motiongenerator implementation
+    float dt=0.01f;
+    motionGen.setDeltaTime(dt);
+    
+    //set drone start position
+    droneState.setPosition(0,0,18);
+    droneState.setOrientation(0,0,60);
+   
+    desiredState.setPosition(0,0,19.62f);
+    desiredState.setOrientation(0,0,40);
+
+    cout << "[Initial] Original Drone state :"<<endl ;
+    droneState.printFullDroneStateData();
+    cout << "[Initial] Desired state :"<<endl ;
+    desiredState.printFullDroneStateData();
+
+    int i=0;
+
+    while(motionGen.getCurrentTime()<=12.78){
+
+        motionGen.takeoffHoverLandingScenario(droneState,30,0,0);
+        
+        //droneState.setPosition(0,0,18);
+        imu.updateMeasures(droneState);
+        motionGen.update();
+
+        ImuPacket packet = builder.createImuPacket(imu);
+        bool isPacketValid = packetValidator.validate(packet);
+
+        if(isPacketValid){
+
+            estimated.computePosition(packet,dt);
+            //error.computeError(desiredState,estimated);
+            error.computeError(desiredState,droneState);
+
+            cout<<"[Original state] #"<<i<<" :"<<endl;
+            droneState.printFullDroneStateData();
+
+            cout<<"[Estimated state] #"<<i<<" :"<<endl;
+            estimated.printFullDroneStateData();
+
+            cout<<"[Error state] #"<<i<<" :"<<endl;
+            error.printFullDroneStateData();
+
+            vector<float> errorOrientation = error.getOrientation();
+            vector<float> errorPosition = error.getPosition();
+
+
+            float thrustCorrection = pid.computeThrust(errorPosition[2]);
+            float rollCorrection = pid.computeRoll(errorOrientation[0]);
+            float pitchCorrection = pid.computePitch(errorOrientation[1]);
+            float yawCorrection = pid.computeYaw(errorOrientation[2]);
+
+            MotorCommand commands = motor.mix(thrustCorrection,rollCorrection,pitchCorrection,yawCorrection);
+
+            cout<<"[ControllerTask] Commands #"<<i<<" :"<<endl;
+            printMotorCommand(commands);
+            i++;
+        }
+    }
+    
 
     return 0;
 }

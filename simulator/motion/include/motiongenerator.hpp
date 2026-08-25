@@ -5,7 +5,7 @@
 #include "../../sensors/include/sensorSaturation.hpp"
 class MotionGenerator{
     private :
-        float currenTime;
+        float currentTime;
         float dt;
         float simulationDurationTime;     
 
@@ -27,9 +27,13 @@ class MotionGenerator{
         void constantPitch(DroneState& drone,float pitchRate);
         void constantYaw(DroneState& drone,float yawRate);
 
-        void sinusoidalRoll(DroneState& drone, float amplitude, float frequency);
-        void sinusoidalPitch(DroneState& drone, float amplitude, float frequency);
-        void RollAndPitch(DroneState& drone,float rollAmplitude,float pitchAmplitude,float frequency);
+        void sinusoidalRoll(DroneState& drone, float amplitude, float frequency); //sinusoidal Pitch
+        void sinusoidalPitch(DroneState& drone, float amplitude, float frequency); //sinusoidal Roll 
+        void rollAndPitch(DroneState& drone,float rollAmplitude,float pitchAmplitude,float frequency); //sinusoidal Roll + sinusoidal Pitch
+        void rollAndYaw(DroneState& drone,float rollAmplitude,float yawAmplitude,float frequency); //sinusoidal Roll + sinusoidal Yaw
+        void rollAndPitchAndConstantYaw(DroneState& drone,float rollAmplitude,float pitchAmplitude,float yawRate, float frequency); //sinusoidal Roll + sinusoidalRoll Pitch + constant Yaw
+        void rollAndPitchAndYaw(DroneState& drone,float rollAmplitude,float pitchAmplitude,float yawAmplitude, float frequency); //sinusoidal Roll + sinusoidal Pitch + sinusoidal Yaw
+       
         void printMotionGeneratorData();
         
 
@@ -38,6 +42,16 @@ class MotionGenerator{
 
         //landing simplifié
         void landing(DroneState& drone);
+
+        
+    void takeoffHoverLandingScenario(DroneState& drone,float r, float p, float y);
+    void linearMovementScenario(DroneState& drone,float r, float p, float y);
+    void sinusoidalRollScenario(DroneState& drone,float amplitude, float frequency);
+    void sinusoidalPitchScenario(DroneState& drone,float amplitude, float frequency);
+    void rollAndPitchAndYawScenario(DroneState& drone,float rollAmplitude,float pitchAmplitude,float yawAmplitude, float frequency);
+    void constantYawScenario(DroneState& drone,float yawRate);
+    void squareScenario(DroneState& drone);
+
 };
 
 #endif // MOTIONGENERATOR_HPP

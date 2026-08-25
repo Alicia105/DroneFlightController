@@ -16,7 +16,7 @@ void actuatorTask(void* parameter){
 
         BaseType_t ok = xQueueReceive(motorCommandQueue,&commands,portMAX_DELAY);
 
-        cout << "[Actuator] Received " << ok << endl;
+        cout << "[ActuatorTask] Received " << ok << endl;
 
         //cout << "[ActuatorTask] Before xQueueReceive" << endl;
         if(ok == pdTRUE){

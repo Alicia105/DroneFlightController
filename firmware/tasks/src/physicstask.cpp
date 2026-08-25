@@ -20,7 +20,7 @@ void physicsTask(void* parameter){
 
     while (true){
         xSemaphoreTake(droneStateMutex, portMAX_DELAY);
-        motionGen.takeOff(drone);
+        motionGen.hover(drone,30,0,0);
         imu.updateMeasures(drone);
         //cout << "[PhysicsTask] Drone state :";
         //drone.printFullDroneStateData();
